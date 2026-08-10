@@ -14,16 +14,183 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      bank_questions: {
+        Row: {
+          choices: Json
+          correct_answer: string
+          created_at: string
+          created_by: string | null
+          difficulty: string
+          domain: string
+          explanation: string | null
+          id: string
+          is_published: boolean
+          passage: string | null
+          prompt: string
+          question_type: string | null
+          section: string
+          skill: string
+          updated_at: string
+        }
+        Insert: {
+          choices?: Json
+          correct_answer: string
+          created_at?: string
+          created_by?: string | null
+          difficulty?: string
+          domain: string
+          explanation?: string | null
+          id?: string
+          is_published?: boolean
+          passage?: string | null
+          prompt: string
+          question_type?: string | null
+          section: string
+          skill: string
+          updated_at?: string
+        }
+        Update: {
+          choices?: Json
+          correct_answer?: string
+          created_at?: string
+          created_by?: string | null
+          difficulty?: string
+          domain?: string
+          explanation?: string | null
+          id?: string
+          is_published?: boolean
+          passage?: string | null
+          prompt?: string
+          question_type?: string | null
+          section?: string
+          skill?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      tests: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          is_published: boolean
+          month: string | null
+          questions: Json
+          section: string
+          source_pdf_path: string | null
+          title: string
+          updated_at: string
+          year: number | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_published?: boolean
+          month?: string | null
+          questions?: Json
+          section: string
+          source_pdf_path?: string | null
+          title: string
+          updated_at?: string
+          year?: number | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_published?: boolean
+          month?: string | null
+          questions?: Json
+          section?: string
+          source_pdf_path?: string | null
+          title?: string
+          updated_at?: string
+          year?: number | null
+        }
+        Relationships: []
+      }
+      user_exam_countdowns: {
+        Row: {
+          exam_date: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          exam_date: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          exam_date?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      word_meaning_cache: {
+        Row: {
+          cached: boolean
+          created_at: string
+          payload: Json
+          source: string
+          updated_at: string
+          word: string
+        }
+        Insert: {
+          cached?: boolean
+          created_at?: string
+          payload: Json
+          source: string
+          updated_at?: string
+          word: string
+        }
+        Update: {
+          cached?: boolean
+          created_at?: string
+          payload?: Json
+          source?: string
+          updated_at?: string
+          word?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +317,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const
