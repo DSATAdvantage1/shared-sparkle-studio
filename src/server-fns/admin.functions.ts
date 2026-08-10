@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
-import { adminErrorMessage, getAdminUser } from "@/server-fns/admin-auth";
+import { adminErrorMessage, getAdminUser, createUserSupabase } from "@/server-fns/admin-auth";
 import { z } from "zod";
 
 function getSupabaseEnv() {

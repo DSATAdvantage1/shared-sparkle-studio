@@ -7,7 +7,9 @@ type CreateBankQuestionsBatchInput = {
 };
 
 // Server-side batch insert that uses the Supabase service role client (bypasses RLS).
-export const createBankQuestionsBatch = createServerFn({ method: "POST" }).handler(
+export const createBankQuestionsBatch = createServerFn({ method: "POST" })
+  .inputValidator((d: CreateBankQuestionsBatchInput) => d)
+  .handler(
   async ({ data }: { data: CreateBankQuestionsBatchInput }) => {
     if (!data || !Array.isArray(data.questions)) {
       throw new Error("Invalid input: questions array required");
@@ -46,7 +48,9 @@ export const createBankQuestionsBatch = createServerFn({ method: "POST" }).handl
 );
 
 // Minimal single-create function (used in some admin flows)
-export const createBankQuestion = createServerFn({ method: "POST" }).handler(
+export const createBankQuestion = createServerFn({ method: "POST" })
+  .inputValidator((d: Record<string, any>) => d)
+  .handler(
   async ({ data }: { data: Record<string, any> }) => {
     const payload = data;
     const { data: inserted, error } = await (supabaseAdmin as any)
@@ -78,7 +82,9 @@ export const listBankQuestionsAdmin = createServerFn({ method: "POST" }).handler
   },
 );
 
-export const deleteBankQuestion = createServerFn({ method: "POST" }).handler(
+export const deleteBankQuestion = createServerFn({ method: "POST" })
+  .inputValidator((d: { id: string }) => d)
+  .handler(
   async ({ data }: { data: { id: string } }) => {
     const { id } = data;
     if (!id) throw new Error("Missing id");
@@ -88,7 +94,9 @@ export const deleteBankQuestion = createServerFn({ method: "POST" }).handler(
   },
 );
 
-export const deleteBankQuestionsBatch = createServerFn({ method: "POST" }).handler(
+export const deleteBankQuestionsBatch = createServerFn({ method: "POST" })
+  .inputValidator((d: { ids: string[] }) => d)
+  .handler(
   async ({ data }: { data: { ids: string[] } }) => {
     const { ids } = data;
     if (!Array.isArray(ids) || ids.length === 0) throw new Error("Missing ids");

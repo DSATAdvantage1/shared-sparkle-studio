@@ -20,7 +20,7 @@ const pdfImportInputSchema = z.object({
 });
 
 export type PdfImportQuestion = {
-  id?: number;
+  id?: number | string;
   section: "RW" | "MATH";
   domain: string;
   skill: string;
