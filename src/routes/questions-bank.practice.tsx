@@ -336,7 +336,7 @@ function PracticePage() {
           </p>
 
           <div className="mt-5 space-y-[10px]">
-            {current.choices.map((c) => {
+            {current.choices.map((c: any) => {
               const isSelected = userChoice === c.letter;
               const isElim = elimSet.has(c.letter);
               const isCorrectChoice =
