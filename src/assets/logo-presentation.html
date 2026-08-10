@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>DSAT Advantage — Logo Presentation</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --navy: #07102a;
+        --deep: #061233;
+        --blue: #0a4cff;
+        --muted: #9fb8ff;
+        --card: #071428;
+        --glass: rgba(255, 255, 255, 0.03);
+      }
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        font-family:
+          Inter,
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          Roboto,
+          Arial;
+        background: linear-gradient(
+          180deg,
+          #031025 0%,
+          #07102a 40%,
+          #081a36 100%
+        );
+        color: #eaf2ff;
+      }
+      .wrap {
+        min-height: 100vh;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        padding: 48px 24px;
+      }
+      .panel {
+        width: 1200px;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.02),
+          rgba(255, 255, 255, 0.01)
+        );
+        border-radius: 14px;
+        padding: 22px;
+        box-shadow: 0 18px 50px rgba(2, 8, 23, 0.6);
+        display: grid;
+        grid-template-columns: 260px 1fr;
+        gap: 28px;
+        align-items: start;
+      }
+
+      /* Sidebar */
+      .sidebar {
+        background: linear-gradient(180deg, #061733, #07102a);
+        border-radius: 12px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        height: 760px;
+      }
+      .nav {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 10px;
+      }
+      .nav a {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 12px;
+        border-radius: 12px;
+        color: #dff0ff;
+        text-decoration: none;
+        font-weight: 600;
+      }
+      .nav a svg {
+        opacity: 0.95;
+      }
+      .nav a.active {
+        background: linear-gradient(90deg, #0a4cff, #0a66ff);
+        box-shadow: 0 10px 30px rgba(9, 38, 80, 0.45);
+        color: white;
+      }
+      .upgrade {
+        margin-top: auto;
+        background: linear-gradient(180deg, #0d2a57, #0a2346);
+        padding: 14px;
+        border-radius: 12px;
+        color: white;
+      }
+
+      /* Main content */
+      .hero {
+        background: linear-gradient(90deg, #081a36 0%, #07102a 60%);
+        border-radius: 16px;
+        padding: 22px;
+        color: white;
+        box-shadow: 0 16px 50px rgba(2, 8, 23, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+      }
+      .metrics {
+        display: flex;
+        gap: 14px;
+        margin-top: 18px;
+      }
+      .metric {
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.02),
+          rgba(255, 255, 255, 0.01)
+        );
+        padding: 14px;
+        border-radius: 14px;
+        min-width: 140px;
+        text-align: center;
+        box-shadow: 0 8px 30px rgba(2, 8, 23, 0.06);
+      }
+
+      .card {
+        background: linear-gradient(180deg, var(--navy), var(--deep));
+        border-radius: 12px;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 12px 30px rgba(2, 8, 23, 0.45);
+      }
+      .badge {
+        width: 120px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        background: transparent;
+        padding: 6px;
+      }
+      .badge img {
+        height: 36px;
+      }
+
+      .showcase {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .logo-large {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+      }
+      .logo-large img {
+        height: 54px;
+      }
+
+      .variants {
+        display: flex;
+        gap: 12px;
+        margin-top: 8px;
+      }
+      .variant {
+        background: var(--glass);
+        padding: 10px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .swatches {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-top: 12px;
+      }
+      .swatch {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        box-shadow: 0 6px 18px rgba(2, 8, 23, 0.4);
+      }
+
+      .meta {
+        color: rgba(255, 255, 255, 0.78);
+        font-size: 13px;
+        line-height: 1.4;
+      }
+      .footer {
+        margin-top: 12px;
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 12px;
+      }
+
+      @media (max-width: 1100px) {
+        .panel {
+          grid-template-columns: 1fr;
+          max-width: 920px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="panel">
+        <div class="sidebar">
+          <div class="badge">
+            <img src="./logo-dsat-badge.svg" alt="DSAT badge" />
+          </div>
+
+          <nav class="nav">
+            <a class="active">Dashboard</a>
+            <a>Practice Tests</a>
+            <a>Questions Bank</a>
+            <a>Score Estimator</a>
+            <a>Vocabulary</a>
+          </nav>
+
+          <div class="upgrade">
+            <strong>Upgrade to Pro</strong>
+            <div style="font-size: 12px; opacity: 0.9; margin-top: 8px">
+              Unlock advanced features and personalized insights.
+            </div>
+            <div style="margin-top: 12px">
+              <button
+                style="
+                  background: #0a4cff;
+                  border: none;
+                  padding: 8px 14px;
+                  border-radius: 8px;
+                  color: white;
+                  cursor: pointer;
+                "
+              >
+                Upgrade Now
+              </button>
+            </div>
+          </div>
+
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              gap: 12px;
+              padding-top: 6px;
+            "
+          >
+            <img
+              src="https://picsum.photos/40"
+              style="width: 40px; height: 40px; border-radius: 20px"
+              alt="avatar"
+            />
+            <div style="color: #dff0ff; font-size: 13px">
+              Aditya Kumar<br /><span style="font-size: 12px; opacity: 0.75"
+                >Basic Plan</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="hero">
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+              "
+            >
+              <div>
+                <h2 style="margin: 0; color: #fff">
+                  Your goal, your plan, your advantage.
+                </h2>
+                <div style="opacity: 0.85; margin-top: 8px">
+                  Stay consistent and ace the DSAT.
+                </div>
+              </div>
+              <div style="display: flex; gap: 12px; align-items: center">
+                <button
+                  style="
+                    background: linear-gradient(90deg, #0a4cff, #0a66ff);
+                    border: none;
+                    padding: 10px 16px;
+                    border-radius: 10px;
+                    color: white;
+                    cursor: pointer;
+                  "
+                >
+                  Continue Learning →
+                </button>
+              </div>
+            </div>
+
+            <div class="metrics">
+              <div class="metric">
+                <div style="font-size: 13px; opacity: 0.9">68%</div>
+                <div style="font-size: 12px; opacity: 0.7">
+                  Overall Progress
+                </div>
+              </div>
+              <div class="metric">
+                <div style="font-size: 13px; opacity: 0.9">12</div>
+                <div style="font-size: 12px; opacity: 0.7">
+                  Mock Tests Taken
+                </div>
+              </div>
+              <div class="metric">
+                <div style="font-size: 13px; opacity: 0.9">1520</div>
+                <div style="font-size: 12px; opacity: 0.7">Best Score</div>
+              </div>
+              <div class="metric">
+                <div style="font-size: 13px; opacity: 0.9">35h 20m</div>
+                <div style="font-size: 12px; opacity: 0.7">
+                  Total Study Time
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 16px; margin-top: 18px">
+            <div
+              style="
+                flex: 1;
+                background: linear-gradient(180deg, #08172b, #07102a);
+                padding: 16px;
+                border-radius: 12px;
+                color: #dff0ff;
+                box-shadow: 0 8px 30px rgba(2, 8, 23, 0.45);
+              "
+            >
+              <div style="font-weight: 700">DSAT Exam Countdown</div>
+              <div style="margin-top: 12px; display: flex; gap: 8px">
+                <div
+                  style="
+                    background: #0b2a57;
+                    padding: 14px;
+                    border-radius: 10px;
+                    text-align: center;
+                  "
+                >
+                  63<br /><span style="font-size: 12px; opacity: 0.7"
+                    >Days</span
+                  >
+                </div>
+                <div
+                  style="
+                    background: #0b2a57;
+                    padding: 14px;
+                    border-radius: 10px;
+                    text-align: center;
+                  "
+                >
+                  14<br /><span style="font-size: 12px; opacity: 0.7"
+                    >Hours</span
+                  >
+                </div>
+                <div
+                  style="
+                    background: #0b2a57;
+                    padding: 14px;
+                    border-radius: 10px;
+                    text-align: center;
+                  "
+                >
+                  32<br /><span style="font-size: 12px; opacity: 0.7"
+                    >Minutes</span
+                  >
+                </div>
+                <div
+                  style="
+                    background: #0b2a57;
+                    padding: 14px;
+                    border-radius: 10px;
+                    text-align: center;
+                  "
+                >
+                  47<br /><span style="font-size: 12px; opacity: 0.7"
+                    >Seconds</span
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div
+              style="
+                width: 360px;
+                background: linear-gradient(180deg, #08172b, #07102a);
+                padding: 16px;
+                border-radius: 12px;
+                color: #dff0ff;
+                box-shadow: 0 8px 30px rgba(2, 8, 23, 0.45);
+              "
+            >
+              <div style="font-weight: 700">Upcoming Mock Test</div>
+              <div style="margin-top: 12px">
+                Full-Length Mock Test #3<br />
+                <div style="margin-top: 12px">
+                  <button
+                    style="
+                      background: #0a4cff;
+                      border: none;
+                      padding: 8px 12px;
+                      border-radius: 8px;
+                      color: white;
+                      cursor: pointer;
+                    "
+                  >
+                    Start Test
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="showcase" style="margin-top: 18px">
+            <div class="logo-large">
+              <img
+                src="./logo-dsat-badge.svg"
+                alt="badge small"
+                style="
+                  width: 92px;
+                  height: 36px;
+                  border-radius: 8px;
+                  box-shadow: 0 10px 30px rgba(2, 8, 23, 0.45);
+                "
+              />
+              <img
+                src="./logo-dsat-wordmark.svg"
+                alt="wordmark"
+                style="height: 46px"
+              />
+            </div>
+
+            <div class="variants">
+              <div class="variant">
+                <img
+                  src="./logo-dsat-badge.svg"
+                  alt="badge"
+                  style="width: 48px; height: 20px; border-radius: 8px"
+                />
+              </div>
+              <div
+                class="variant"
+                style="
+                  padding: 10px 20px;
+                  border-radius: 999px;
+                  background: linear-gradient(
+                    90deg,
+                    rgba(10, 76, 255, 0.12),
+                    rgba(7, 18, 42, 0.04)
+                  );
+                  align-items: center;
+                "
+              >
+                <img
+                  src="./logo-dsat-wordmark.svg"
+                  alt="wordmark small"
+                  style="height: 28px; display: block"
+                />
+              </div>
+              <div
+                class="variant"
+                style="
+                  background: transparent;
+                  border: 1px solid rgba(255, 255, 255, 0.04);
+                "
+              >
+                Text-only:
+                <span style="margin-left: 8px; color: var(--muted)"
+                  >DSAT Advantage</span
+                >
+              </div>
+            </div>
+
+            <div class="swatches">
+              <div class="swatch" style="background: var(--navy)"></div>
+              <div class="swatch" style="background: var(--deep)"></div>
+              <div class="swatch" style="background: var(--blue)"></div>
+              <div class="swatch" style="background: var(--muted)"></div>
+            </div>
+
+            <div class="meta">
+              <strong>Design notes:</strong> Refined sidebar logo, navy-blue
+              palette, rounded cards, soft shadows, and generous spacing to
+              match the provided UI.
+            </div>
+            <div class="footer">
+              Files: src/assets/logo-dsat-badge.svg ·
+              src/assets/logo-dsat-wordmark.svg ·
+              src/assets/logo-presentation.html
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
