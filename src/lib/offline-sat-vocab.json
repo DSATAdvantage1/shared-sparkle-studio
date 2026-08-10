@@ -1,0 +1,88 @@
+{
+  "furnishings": {
+    "definition": "Furniture and other items that furnish a room, such as decorations and equipment.",
+    "partOfSpeech": "noun",
+    "pronunciation": "/ˈfɝː.nɪ.ʃɪŋz/",
+    "synonyms": ["furniture", "equipment", "fixtures", "amenities"],
+    "examples": [
+      "The apartment’s furnishings made it feel warm and ready to live in."
+    ],
+    "satExplanation": "In SAT passages, furnishings often appears in descriptions of setting and atmosphere.",
+    "memoryTip": "Furnishings come from “furnish”: what you add to make a space complete."
+  },
+  "gather": {
+    "definition": "To collect or bring things together into one place or idea.",
+    "partOfSpeech": "verb",
+    "pronunciation": "/ˈɡæð.ər/",
+    "synonyms": ["collect", "assemble", "amass", "bring together"],
+    "examples": [
+      "As students reviewed the notes, they gathered the main ideas into an outline."
+    ],
+    "satExplanation": "On the SAT, “gather” commonly signals organizing information from sources into a conclusion.",
+    "memoryTip": "Gather gear: you collect items together."
+  },
+  "acknowledge": {
+    "definition": "To recognize or admit something as true, or to respond to someone.",
+    "partOfSpeech": "verb",
+    "pronunciation": "/əkˈnɑː.lɪdʒ/",
+    "synonyms": ["recognize", "admit", "accept", "respect"],
+    "examples": ["She acknowledged the mistake and revised her answer."],
+    "satExplanation": "In SAT reading, acknowledging often means conceding or accepting an idea that’s been presented.",
+    "memoryTip": "Acknowledge = “ack now”: openly recognize it."
+  },
+  "proceed": {
+    "definition": "To move forward or continue, especially after approval or preparation.",
+    "partOfSpeech": "verb",
+    "pronunciation": "/prəˈsiːd/",
+    "synonyms": ["continue", "advance", "go on", "carry on"],
+    "examples": [
+      "Once the instructions were clear, we proceeded to the next section."
+    ],
+    "satExplanation": "SAT instructions sometimes use “proceed” to indicate moving on to the next step.",
+    "memoryTip": "Proceed = ‘pro’-ceed: go ahead and keep going."
+  },
+  "implicit": {
+    "definition": "Implied rather than directly stated; understood without being expressed.",
+    "partOfSpeech": "adjective",
+    "pronunciation": "/ɪmˈplɪs.ɪt/",
+    "synonyms": ["implied", "understood", "unstated", "indirect"],
+    "examples": [
+      "The author made an implicit argument that the data supported the conclusion."
+    ],
+    "satExplanation": "SAT inference questions frequently depend on implicit meaning—what’s true ‘in the background’ even if not stated.",
+    "memoryTip": "Implicit = “in” the meaning; it’s there without being spoken."
+  },
+  "nuance": {
+    "definition": "A slight difference in meaning, usually the subtle way something is understood.",
+    "partOfSpeech": "noun",
+    "pronunciation": "/ˈnuː.æns/",
+    "synonyms": ["subtlety", "distinction", "shade", "detail"],
+    "examples": [
+      "The author’s argument depends on an important nuance in the evidence."
+    ],
+    "satExplanation": "SAT questions often test whether you can detect small shifts in meaning rather than obvious facts.",
+    "memoryTip": "Think “nu-ance”: a new shade in meaning."
+  },
+  "concise": {
+    "definition": "Brief but clear; using few words to communicate well.",
+    "partOfSpeech": "adjective",
+    "pronunciation": "/kənˈsaɪs/",
+    "synonyms": ["brief", "succinct", "compact", "clear"],
+    "examples": [
+      "Her concise summary captured the main idea in two sentences."
+    ],
+    "satExplanation": "SAT writing/reading often rewards concise wording—cutting extra detail while keeping meaning precise.",
+    "memoryTip": "Concise = ‘con’ (together) + ‘cise’ (cut): cut to essentials."
+  },
+  "infer": {
+    "definition": "To conclude or decide something by reasoning from evidence rather than direct statements.",
+    "partOfSpeech": "verb",
+    "pronunciation": "/ɪnˈfɝː/",
+    "synonyms": ["conclude", "deduce", "reason", "derive"],
+    "examples": [
+      "From the clues, we can infer that the author wanted to persuade readers."
+    ],
+    "satExplanation": "On the SAT, “infer” means using evidence to reach a logical conclusion.",
+    "memoryTip": "Infer = “in” fer (find from clues): figure it out using evidence."
+  }
+}

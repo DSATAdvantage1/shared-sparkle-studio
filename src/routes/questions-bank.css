@@ -1,0 +1,199 @@
+/* questions-bank.css */
+
+.qbank-page-container {
+  min-height: 100vh;
+  width: 100%;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--color-background);
+  position: relative;
+  overflow: hidden;
+  padding: 4rem 1.5rem;
+}
+
+/* Academic/Digital grid background */
+.qbank-bg-grid {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: 
+    linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+  -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+}
+
+.dark .qbank-bg-grid {
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+}
+
+.qbank-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle, oklch(0.62 0.2 258 / 0.1) 0%, transparent 60%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.qbank-main {
+  position: relative;
+  z-index: 1;
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  animation: fadeUp 0.6s ease-out forwards;
+}
+
+.qbank-logo-box {
+  width: 5rem;
+  height: 5rem;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.dark .qbank-logo-box {
+  background: rgba(15, 15, 20, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.qbank-title {
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: var(--color-foreground);
+  letter-spacing: -0.03em;
+  margin-bottom: 1rem;
+}
+
+.qbank-subtitle {
+  font-size: 1.25rem;
+  color: var(--color-muted-foreground);
+  max-width: 500px;
+  margin-bottom: 3rem;
+}
+
+.qbank-grid {
+  width: 100%;
+  max-width: 600px;
+  display: grid;
+  gap: 1.5rem;
+}
+
+.qbank-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 1.5rem;
+  padding: 1.5rem 2rem;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 4px 15px -10px rgba(0, 0, 0, 0.05);
+  text-decoration: none;
+}
+
+.dark .qbank-card {
+  background: rgba(15, 15, 20, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.qbank-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 15px 35px -10px rgba(var(--color-primary-glow), 0.15);
+}
+
+.qbank-card.rw {
+  border-color: rgba(225, 29, 72, 0.2);
+}
+
+.dark .qbank-card.rw {
+  border-color: rgba(225, 29, 72, 0.15);
+}
+
+.qbank-card.rw:hover {
+  border-color: rgba(225, 29, 72, 0.4);
+}
+
+.qbank-card.math {
+  border-color: rgba(37, 99, 235, 0.2);
+}
+
+.dark .qbank-card.math {
+  border-color: rgba(37, 99, 235, 0.15);
+}
+
+.qbank-card.math:hover {
+  border-color: rgba(37, 99, 235, 0.4);
+}
+
+.qbank-card-content {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.qbank-icon-box {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qbank-card.rw .qbank-icon-box {
+  background: rgba(225, 29, 72, 0.1);
+  color: rgb(225, 29, 72);
+}
+
+.qbank-card.math .qbank-icon-box {
+  background: rgba(37, 99, 235, 0.1);
+  color: rgb(37, 99, 235);
+}
+
+.qbank-card-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--color-foreground);
+}
+
+.qbank-arrow {
+  transition: transform 0.2s;
+}
+
+.qbank-card.rw .qbank-arrow {
+  color: rgb(225, 29, 72);
+}
+
+.qbank-card.math .qbank-arrow {
+  color: rgb(37, 99, 235);
+}
+
+.qbank-card:hover .qbank-arrow {
+  transform: translateX(4px);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}

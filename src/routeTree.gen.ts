@@ -9,38 +9,375 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VocabularyRouteImport } from './routes/vocabulary'
+import { Route as TestRouteImport } from './routes/test'
+import { Route as ScoreEstimatorRouteImport } from './routes/score-estimator'
+import { Route as QuestionsBankRouteImport } from './routes/questions-bank'
+import { Route as ExamsRouteImport } from './routes/exams'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as WordMeaningPopoverRouteImport } from './routes/WordMeaningPopover'
+import { Route as TextSelectionPopupPassageRouteImport } from './routes/TextSelectionPopupPassage'
+import { Route as TextSelectionPopupContextRouteImport } from './routes/TextSelectionPopupContext'
+import { Route as TextSelectionPopupRouteImport } from './routes/TextSelectionPopup'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as QuestionsBankReadingWritingRouteImport } from './routes/questions-bank.reading-writing'
+import { Route as QuestionsBankPracticeRouteImport } from './routes/questions-bank.practice'
+import { Route as QuestionsBankMathRouteImport } from './routes/questions-bank.math'
+import { Route as AdminUploadRouteImport } from './routes/admin.upload'
+import { Route as AdminTestsRouteImport } from './routes/admin.tests'
+import { Route as AdminQuestionBankRouteImport } from './routes/admin.question-bank'
+import { Route as AdminPdfImportQuestionBankRouteImport } from './routes/admin.pdf-import-question-bank'
+import { Route as QuestionsBankPracticeFixedRouteImport } from './routes/questions-bank.practice.fixed'
+import { Route as AdminEditIdRouteImport } from './routes/admin.edit.$id'
 
+const VocabularyRoute = VocabularyRouteImport.update({
+  id: '/vocabulary',
+  path: '/vocabulary',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TestRoute = TestRouteImport.update({
+  id: '/test',
+  path: '/test',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ScoreEstimatorRoute = ScoreEstimatorRouteImport.update({
+  id: '/score-estimator',
+  path: '/score-estimator',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QuestionsBankRoute = QuestionsBankRouteImport.update({
+  id: '/questions-bank',
+  path: '/questions-bank',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExamsRoute = ExamsRouteImport.update({
+  id: '/exams',
+  path: '/exams',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WordMeaningPopoverRoute = WordMeaningPopoverRouteImport.update({
+  id: '/WordMeaningPopover',
+  path: '/WordMeaningPopover',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TextSelectionPopupPassageRoute =
+  TextSelectionPopupPassageRouteImport.update({
+    id: '/TextSelectionPopupPassage',
+    path: '/TextSelectionPopupPassage',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const TextSelectionPopupContextRoute =
+  TextSelectionPopupContextRouteImport.update({
+    id: '/TextSelectionPopupContext',
+    path: '/TextSelectionPopupContext',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const TextSelectionPopupRoute = TextSelectionPopupRouteImport.update({
+  id: '/TextSelectionPopup',
+  path: '/TextSelectionPopup',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const QuestionsBankReadingWritingRoute =
+  QuestionsBankReadingWritingRouteImport.update({
+    id: '/reading-writing',
+    path: '/reading-writing',
+    getParentRoute: () => QuestionsBankRoute,
+  } as any)
+const QuestionsBankPracticeRoute = QuestionsBankPracticeRouteImport.update({
+  id: '/practice',
+  path: '/practice',
+  getParentRoute: () => QuestionsBankRoute,
+} as any)
+const QuestionsBankMathRoute = QuestionsBankMathRouteImport.update({
+  id: '/math',
+  path: '/math',
+  getParentRoute: () => QuestionsBankRoute,
+} as any)
+const AdminUploadRoute = AdminUploadRouteImport.update({
+  id: '/upload',
+  path: '/upload',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminTestsRoute = AdminTestsRouteImport.update({
+  id: '/tests',
+  path: '/tests',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminQuestionBankRoute = AdminQuestionBankRouteImport.update({
+  id: '/question-bank',
+  path: '/question-bank',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminPdfImportQuestionBankRoute =
+  AdminPdfImportQuestionBankRouteImport.update({
+    id: '/pdf-import-question-bank',
+    path: '/pdf-import-question-bank',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const QuestionsBankPracticeFixedRoute =
+  QuestionsBankPracticeFixedRouteImport.update({
+    id: '/fixed',
+    path: '/fixed',
+    getParentRoute: () => QuestionsBankPracticeRoute,
+  } as any)
+const AdminEditIdRoute = AdminEditIdRouteImport.update({
+  id: '/edit/$id',
+  path: '/edit/$id',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/TextSelectionPopup': typeof TextSelectionPopupRoute
+  '/TextSelectionPopupContext': typeof TextSelectionPopupContextRoute
+  '/TextSelectionPopupPassage': typeof TextSelectionPopupPassageRoute
+  '/WordMeaningPopover': typeof WordMeaningPopoverRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/exams': typeof ExamsRoute
+  '/questions-bank': typeof QuestionsBankRouteWithChildren
+  '/score-estimator': typeof ScoreEstimatorRoute
+  '/test': typeof TestRoute
+  '/vocabulary': typeof VocabularyRoute
+  '/admin/pdf-import-question-bank': typeof AdminPdfImportQuestionBankRoute
+  '/admin/question-bank': typeof AdminQuestionBankRoute
+  '/admin/tests': typeof AdminTestsRoute
+  '/admin/upload': typeof AdminUploadRoute
+  '/questions-bank/math': typeof QuestionsBankMathRoute
+  '/questions-bank/practice': typeof QuestionsBankPracticeRouteWithChildren
+  '/questions-bank/reading-writing': typeof QuestionsBankReadingWritingRoute
+  '/admin/edit/$id': typeof AdminEditIdRoute
+  '/questions-bank/practice/fixed': typeof QuestionsBankPracticeFixedRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/TextSelectionPopup': typeof TextSelectionPopupRoute
+  '/TextSelectionPopupContext': typeof TextSelectionPopupContextRoute
+  '/TextSelectionPopupPassage': typeof TextSelectionPopupPassageRoute
+  '/WordMeaningPopover': typeof WordMeaningPopoverRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/exams': typeof ExamsRoute
+  '/questions-bank': typeof QuestionsBankRouteWithChildren
+  '/score-estimator': typeof ScoreEstimatorRoute
+  '/test': typeof TestRoute
+  '/vocabulary': typeof VocabularyRoute
+  '/admin/pdf-import-question-bank': typeof AdminPdfImportQuestionBankRoute
+  '/admin/question-bank': typeof AdminQuestionBankRoute
+  '/admin/tests': typeof AdminTestsRoute
+  '/admin/upload': typeof AdminUploadRoute
+  '/questions-bank/math': typeof QuestionsBankMathRoute
+  '/questions-bank/practice': typeof QuestionsBankPracticeRouteWithChildren
+  '/questions-bank/reading-writing': typeof QuestionsBankReadingWritingRoute
+  '/admin/edit/$id': typeof AdminEditIdRoute
+  '/questions-bank/practice/fixed': typeof QuestionsBankPracticeFixedRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/TextSelectionPopup': typeof TextSelectionPopupRoute
+  '/TextSelectionPopupContext': typeof TextSelectionPopupContextRoute
+  '/TextSelectionPopupPassage': typeof TextSelectionPopupPassageRoute
+  '/WordMeaningPopover': typeof WordMeaningPopoverRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/exams': typeof ExamsRoute
+  '/questions-bank': typeof QuestionsBankRouteWithChildren
+  '/score-estimator': typeof ScoreEstimatorRoute
+  '/test': typeof TestRoute
+  '/vocabulary': typeof VocabularyRoute
+  '/admin/pdf-import-question-bank': typeof AdminPdfImportQuestionBankRoute
+  '/admin/question-bank': typeof AdminQuestionBankRoute
+  '/admin/tests': typeof AdminTestsRoute
+  '/admin/upload': typeof AdminUploadRoute
+  '/questions-bank/math': typeof QuestionsBankMathRoute
+  '/questions-bank/practice': typeof QuestionsBankPracticeRouteWithChildren
+  '/questions-bank/reading-writing': typeof QuestionsBankReadingWritingRoute
+  '/admin/edit/$id': typeof AdminEditIdRoute
+  '/questions-bank/practice/fixed': typeof QuestionsBankPracticeFixedRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/TextSelectionPopup'
+    | '/TextSelectionPopupContext'
+    | '/TextSelectionPopupPassage'
+    | '/WordMeaningPopover'
+    | '/admin'
+    | '/auth'
+    | '/exams'
+    | '/questions-bank'
+    | '/score-estimator'
+    | '/test'
+    | '/vocabulary'
+    | '/admin/pdf-import-question-bank'
+    | '/admin/question-bank'
+    | '/admin/tests'
+    | '/admin/upload'
+    | '/questions-bank/math'
+    | '/questions-bank/practice'
+    | '/questions-bank/reading-writing'
+    | '/admin/edit/$id'
+    | '/questions-bank/practice/fixed'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/TextSelectionPopup'
+    | '/TextSelectionPopupContext'
+    | '/TextSelectionPopupPassage'
+    | '/WordMeaningPopover'
+    | '/admin'
+    | '/auth'
+    | '/exams'
+    | '/questions-bank'
+    | '/score-estimator'
+    | '/test'
+    | '/vocabulary'
+    | '/admin/pdf-import-question-bank'
+    | '/admin/question-bank'
+    | '/admin/tests'
+    | '/admin/upload'
+    | '/questions-bank/math'
+    | '/questions-bank/practice'
+    | '/questions-bank/reading-writing'
+    | '/admin/edit/$id'
+    | '/questions-bank/practice/fixed'
+  id:
+    | '__root__'
+    | '/'
+    | '/TextSelectionPopup'
+    | '/TextSelectionPopupContext'
+    | '/TextSelectionPopupPassage'
+    | '/WordMeaningPopover'
+    | '/admin'
+    | '/auth'
+    | '/exams'
+    | '/questions-bank'
+    | '/score-estimator'
+    | '/test'
+    | '/vocabulary'
+    | '/admin/pdf-import-question-bank'
+    | '/admin/question-bank'
+    | '/admin/tests'
+    | '/admin/upload'
+    | '/questions-bank/math'
+    | '/questions-bank/practice'
+    | '/questions-bank/reading-writing'
+    | '/admin/edit/$id'
+    | '/questions-bank/practice/fixed'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  TextSelectionPopupRoute: typeof TextSelectionPopupRoute
+  TextSelectionPopupContextRoute: typeof TextSelectionPopupContextRoute
+  TextSelectionPopupPassageRoute: typeof TextSelectionPopupPassageRoute
+  WordMeaningPopoverRoute: typeof WordMeaningPopoverRoute
+  AdminRoute: typeof AdminRouteWithChildren
+  AuthRoute: typeof AuthRoute
+  ExamsRoute: typeof ExamsRoute
+  QuestionsBankRoute: typeof QuestionsBankRouteWithChildren
+  ScoreEstimatorRoute: typeof ScoreEstimatorRoute
+  TestRoute: typeof TestRoute
+  VocabularyRoute: typeof VocabularyRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/vocabulary': {
+      id: '/vocabulary'
+      path: '/vocabulary'
+      fullPath: '/vocabulary'
+      preLoaderRoute: typeof VocabularyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/test': {
+      id: '/test'
+      path: '/test'
+      fullPath: '/test'
+      preLoaderRoute: typeof TestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/score-estimator': {
+      id: '/score-estimator'
+      path: '/score-estimator'
+      fullPath: '/score-estimator'
+      preLoaderRoute: typeof ScoreEstimatorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/questions-bank': {
+      id: '/questions-bank'
+      path: '/questions-bank'
+      fullPath: '/questions-bank'
+      preLoaderRoute: typeof QuestionsBankRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/exams': {
+      id: '/exams'
+      path: '/exams'
+      fullPath: '/exams'
+      preLoaderRoute: typeof ExamsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/WordMeaningPopover': {
+      id: '/WordMeaningPopover'
+      path: '/WordMeaningPopover'
+      fullPath: '/WordMeaningPopover'
+      preLoaderRoute: typeof WordMeaningPopoverRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/TextSelectionPopupPassage': {
+      id: '/TextSelectionPopupPassage'
+      path: '/TextSelectionPopupPassage'
+      fullPath: '/TextSelectionPopupPassage'
+      preLoaderRoute: typeof TextSelectionPopupPassageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/TextSelectionPopupContext': {
+      id: '/TextSelectionPopupContext'
+      path: '/TextSelectionPopupContext'
+      fullPath: '/TextSelectionPopupContext'
+      preLoaderRoute: typeof TextSelectionPopupContextRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/TextSelectionPopup': {
+      id: '/TextSelectionPopup'
+      path: '/TextSelectionPopup'
+      fullPath: '/TextSelectionPopup'
+      preLoaderRoute: typeof TextSelectionPopupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +385,142 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/questions-bank/reading-writing': {
+      id: '/questions-bank/reading-writing'
+      path: '/reading-writing'
+      fullPath: '/questions-bank/reading-writing'
+      preLoaderRoute: typeof QuestionsBankReadingWritingRouteImport
+      parentRoute: typeof QuestionsBankRoute
+    }
+    '/questions-bank/practice': {
+      id: '/questions-bank/practice'
+      path: '/practice'
+      fullPath: '/questions-bank/practice'
+      preLoaderRoute: typeof QuestionsBankPracticeRouteImport
+      parentRoute: typeof QuestionsBankRoute
+    }
+    '/questions-bank/math': {
+      id: '/questions-bank/math'
+      path: '/math'
+      fullPath: '/questions-bank/math'
+      preLoaderRoute: typeof QuestionsBankMathRouteImport
+      parentRoute: typeof QuestionsBankRoute
+    }
+    '/admin/upload': {
+      id: '/admin/upload'
+      path: '/upload'
+      fullPath: '/admin/upload'
+      preLoaderRoute: typeof AdminUploadRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/tests': {
+      id: '/admin/tests'
+      path: '/tests'
+      fullPath: '/admin/tests'
+      preLoaderRoute: typeof AdminTestsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/question-bank': {
+      id: '/admin/question-bank'
+      path: '/question-bank'
+      fullPath: '/admin/question-bank'
+      preLoaderRoute: typeof AdminQuestionBankRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/pdf-import-question-bank': {
+      id: '/admin/pdf-import-question-bank'
+      path: '/pdf-import-question-bank'
+      fullPath: '/admin/pdf-import-question-bank'
+      preLoaderRoute: typeof AdminPdfImportQuestionBankRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/questions-bank/practice/fixed': {
+      id: '/questions-bank/practice/fixed'
+      path: '/fixed'
+      fullPath: '/questions-bank/practice/fixed'
+      preLoaderRoute: typeof QuestionsBankPracticeFixedRouteImport
+      parentRoute: typeof QuestionsBankPracticeRoute
+    }
+    '/admin/edit/$id': {
+      id: '/admin/edit/$id'
+      path: '/edit/$id'
+      fullPath: '/admin/edit/$id'
+      preLoaderRoute: typeof AdminEditIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
+interface AdminRouteChildren {
+  AdminPdfImportQuestionBankRoute: typeof AdminPdfImportQuestionBankRoute
+  AdminQuestionBankRoute: typeof AdminQuestionBankRoute
+  AdminTestsRoute: typeof AdminTestsRoute
+  AdminUploadRoute: typeof AdminUploadRoute
+  AdminEditIdRoute: typeof AdminEditIdRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminPdfImportQuestionBankRoute: AdminPdfImportQuestionBankRoute,
+  AdminQuestionBankRoute: AdminQuestionBankRoute,
+  AdminTestsRoute: AdminTestsRoute,
+  AdminUploadRoute: AdminUploadRoute,
+  AdminEditIdRoute: AdminEditIdRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
+interface QuestionsBankPracticeRouteChildren {
+  QuestionsBankPracticeFixedRoute: typeof QuestionsBankPracticeFixedRoute
+}
+
+const QuestionsBankPracticeRouteChildren: QuestionsBankPracticeRouteChildren = {
+  QuestionsBankPracticeFixedRoute: QuestionsBankPracticeFixedRoute,
+}
+
+const QuestionsBankPracticeRouteWithChildren =
+  QuestionsBankPracticeRoute._addFileChildren(
+    QuestionsBankPracticeRouteChildren,
+  )
+
+interface QuestionsBankRouteChildren {
+  QuestionsBankMathRoute: typeof QuestionsBankMathRoute
+  QuestionsBankPracticeRoute: typeof QuestionsBankPracticeRouteWithChildren
+  QuestionsBankReadingWritingRoute: typeof QuestionsBankReadingWritingRoute
+}
+
+const QuestionsBankRouteChildren: QuestionsBankRouteChildren = {
+  QuestionsBankMathRoute: QuestionsBankMathRoute,
+  QuestionsBankPracticeRoute: QuestionsBankPracticeRouteWithChildren,
+  QuestionsBankReadingWritingRoute: QuestionsBankReadingWritingRoute,
+}
+
+const QuestionsBankRouteWithChildren = QuestionsBankRoute._addFileChildren(
+  QuestionsBankRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  TextSelectionPopupRoute: TextSelectionPopupRoute,
+  TextSelectionPopupContextRoute: TextSelectionPopupContextRoute,
+  TextSelectionPopupPassageRoute: TextSelectionPopupPassageRoute,
+  WordMeaningPopoverRoute: WordMeaningPopoverRoute,
+  AdminRoute: AdminRouteWithChildren,
+  AuthRoute: AuthRoute,
+  ExamsRoute: ExamsRoute,
+  QuestionsBankRoute: QuestionsBankRouteWithChildren,
+  ScoreEstimatorRoute: ScoreEstimatorRoute,
+  TestRoute: TestRoute,
+  VocabularyRoute: VocabularyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
 
 import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
+import type { createStart } from '@tanstack/react-start'
 declare module '@tanstack/react-start' {
   interface Register {
     ssr: true
     router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
   }
 }

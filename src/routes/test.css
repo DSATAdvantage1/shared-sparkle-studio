@@ -1,0 +1,167 @@
+/* test.css */
+
+.test-page-container {
+  min-height: 100vh;
+  width: 100%;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Background grid & gradients */
+.test-bg-grid {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: 
+    linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: radial-gradient(circle at center, black 60%, transparent 100%);
+  -webkit-mask-image: radial-gradient(circle at center, black 60%, transparent 100%);
+}
+
+.dark .test-bg-grid {
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+}
+
+.test-glow-radial {
+  position: absolute;
+  top: -10%;
+  left: 20%;
+  width: 60%;
+  height: 60%;
+  background: radial-gradient(circle, oklch(0.62 0.2 258 / 0.08) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(80px);
+}
+
+/* Premium Card Designs */
+.test-card-premium {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.02) inset;
+  border-radius: 2rem;
+  transition: all 0.3s ease;
+}
+
+.dark .test-card-premium {
+  background: rgba(15, 17, 26, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+}
+
+/* Test Interface Header & Footer */
+.test-header-bar {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  z-index: 10;
+}
+
+.dark .test-header-bar {
+  background: rgba(10, 12, 20, 0.9);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.test-footer-bar {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  z-index: 10;
+}
+
+.dark .test-footer-bar {
+  background: rgba(10, 12, 20, 0.9);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Question Content layout */
+.test-question-box {
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 1.5rem;
+  padding: 1.75rem;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.04);
+}
+
+.dark .test-question-box {
+  background: rgba(15, 17, 26, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
+}
+
+/* Choices list style */
+.test-choice-button {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 1rem !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dark .test-choice-button {
+  background: rgba(20, 22, 35, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.test-choice-button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 1);
+  border-color: rgba(var(--color-primary), 0.5);
+  transform: translateX(2px);
+}
+
+.dark .test-choice-button:hover:not(:disabled) {
+  background: rgba(25, 28, 45, 1);
+  border-color: rgba(var(--color-primary), 0.5);
+}
+
+.test-choice-button.selected {
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.08) 0%, rgba(3, 105, 161, 0.04) 100%) !important;
+  border-color: #0284c7 !important;
+  box-shadow: 0 0 12px rgba(2, 132, 199, 0.1);
+}
+
+.dark .test-choice-button.selected {
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.15) 0%, rgba(3, 105, 161, 0.06) 100%) !important;
+  border-color: #38bdf8 !important;
+}
+
+/* Bluebook-style top and bottom custom accent strips */
+.dsat-accent-strip {
+  height: 4px;
+  background: linear-gradient(90deg, #0284c7 0%, #0369a1 50%, #075985 100%);
+  width: 100%;
+}
+
+.dark .dsat-accent-strip {
+  background: linear-gradient(90deg, #38bdf8 0%, #0284c7 50%, #0369a1 100%);
+}
+
+/* Micro-animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Desmos Calculator Window Custom Styling */
+.desmos-window {
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(20px);
+}
