@@ -98,14 +98,14 @@ function TestPage() {
   const [stage, setStage] = useState<"intro" | "test" | "results">("test");
   const [moduleKey, setModuleKey] = useState<ModuleKey>("rw");
   const [index, setIndex] = useState(0);
-  const [answers, setAnswers] = useState<Record<number, number | undefined>>(
+  const [answers, setAnswers] = useState<Record<string | number, number | undefined>>(
     {},
   );
-  const [marked, setMarked] = useState<Record<number, boolean>>({});
-  const [eliminated, setEliminated] = useState<Record<number, Set<number>>>({});
+  const [marked, setMarked] = useState<Record<string | number, boolean>>({});
+  const [eliminated, setEliminated] = useState<Record<string | number, Set<number>>>({});
   const [timeLeft, setTimeLeft] = useState(26 * 60 + 17);
   const [eliminatorOn, setEliminatorOn] = useState(false);
-  const [highlights, setHighlights] = useState<Record<number, Highlight[]>>({});
+  const [highlights, setHighlights] = useState<Record<string | number, Highlight[]>>({});
   const [highlightingOn, setHighlightingOn] = useState(false);
   const [calcOpen, setCalcOpen] = useState(false);
   const [refOpen, setRefOpen] = useState(false);

@@ -10,6 +10,7 @@ export type Question = {
   skill?: string;
   difficulty?: string;
   questionType?: string; // e.g. "words in context", "grammar", "algebra"
+  questionId?: string;
   graph?: {
     type?: string;
     description?: string;

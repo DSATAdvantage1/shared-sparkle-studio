@@ -113,7 +113,7 @@ function PracticePage() {
     setEliminated({});
   }, [section, skill, domain]);
 
-  const current = questions[index];
+  const current = questions[index] as any;
 
   const surfaceClass = useMemo(
     () =>
