@@ -100,8 +100,8 @@ function BatteryIndicator() {
 
   return (
     <div
-      className={`flex items-center gap-1.5 rounded-full border border-slate-200/60 bg-white/70 px-3 py-1.5 shadow-sm backdrop-blur-md text-xs font-semibold tabular-nums ${color}`}
-      title={`Battery: ${pct}%${charging ? " (charging)" : ""}`}
+      className={`flex cursor-grab select-none items-center gap-1.5 rounded-full border border-slate-200/60 bg-white/70 px-3 py-1.5 shadow-sm backdrop-blur-md text-xs font-semibold tabular-nums active:cursor-grabbing ${color}`}
+      title={`Battery: ${pct}%${charging ? " (charging)" : ""} — drag to move`}
     >
       <BattIcon className="h-3.5 w-3.5 shrink-0" />
       <span>{pct}%</span>
@@ -111,6 +111,86 @@ function BatteryIndicator() {
     </div>
   );
 }
+
+// ─── Draggable wrapper (position persisted in localStorage) ───────────────────
+const BATTERY_POS_KEY = "battery-indicator-pos";
+
+function DraggableBattery() {
+  const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
+  const ref = useRef<HTMLDivElement>(null);
+  const drag = useRef<{ dx: number; dy: number } | null>(null);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(BATTERY_POS_KEY);
+      if (raw) {
+        const p = JSON.parse(raw);
+        if (typeof p?.x === "number" && typeof p?.y === "number") setPos(p);
+      }
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
+  const clamp = (x: number, y: number) => {
+    const el = ref.current;
+    const w = el?.offsetWidth ?? 80;
+    const h = el?.offsetHeight ?? 32;
+    return {
+      x: Math.min(Math.max(x, 4), window.innerWidth - w - 4),
+      y: Math.min(Math.max(y, 4), window.innerHeight - h - 4),
+    };
+  };
+
+  const onPointerDown = (e: React.PointerEvent) => {
+    const el = ref.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    drag.current = { dx: e.clientX - rect.left, dy: e.clientY - rect.top };
+    el.setPointerCapture(e.pointerId);
+  };
+
+  const onPointerMove = (e: React.PointerEvent) => {
+    if (!drag.current) return;
+    e.preventDefault();
+    setPos(clamp(e.clientX - drag.current.dx, e.clientY - drag.current.dy));
+  };
+
+  const onPointerUp = (e: React.PointerEvent) => {
+    if (!drag.current) return;
+    drag.current = null;
+    ref.current?.releasePointerCapture(e.pointerId);
+    setPos((p) => {
+      if (p) {
+        try {
+          localStorage.setItem(BATTERY_POS_KEY, JSON.stringify(p));
+        } catch {
+          /* ignore */
+        }
+      }
+      return p;
+    });
+  };
+
+  return (
+    <div
+      ref={ref}
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={onPointerUp}
+      onPointerCancel={onPointerUp}
+      className="pointer-events-auto fixed z-[9998] touch-none"
+      style={
+        pos
+          ? { left: pos.x, top: pos.y }
+          : { right: 12, top: 12 }
+      }
+    >
+      <BatteryIndicator />
+    </div>
+  );
+}
+
 
 function NotFoundComponent() {
   return (
