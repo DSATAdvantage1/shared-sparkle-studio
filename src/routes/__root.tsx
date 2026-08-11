@@ -627,12 +627,9 @@ function RootComponent() {
       <ViewMeaningButton />
       <WordMeaningPopup />
 
-      {/* Battery indicator — fixed top-right, visible on every page */}
-      <div className="pointer-events-none fixed top-0 right-0 z-[9998] flex items-start justify-end p-3">
-        <div className="pointer-events-auto">
-          <BatteryIndicator />
-        </div>
-      </div>
+      {/* Battery indicator — draggable, position saved */}
+      <DraggableBattery />
+
     </TextSelectionProvider>
   );
 }
