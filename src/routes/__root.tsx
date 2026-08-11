@@ -6,7 +6,7 @@ import {
   Scripts,
   useLocation,
 } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   BarChart3,
   BatteryCharging,
