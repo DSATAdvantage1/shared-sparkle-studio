@@ -349,6 +349,17 @@ function PracticePage() {
             </div>
           )}
 
+          {current.graph?.imageUrl && (
+            <figure className="mb-5">
+              <img
+                src={current.graph.imageUrl}
+                alt={current.graph.description ?? "Figure for this question"}
+                loading="lazy"
+                className="mx-auto max-h-[420px] w-auto max-w-full rounded-lg border border-foreground/15 bg-background p-2"
+              />
+            </figure>
+          )}
+
           <p className="whitespace-pre-line font-[Georgia,Times_New_Roman,serif] text-[17px] leading-[1.42] text-foreground">
             <strong className="font-extrabold">[DSATAdvantage.com]</strong>{" "}
             {current.prompt}
