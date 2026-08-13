@@ -15,6 +15,7 @@ export type Question = {
     type?: string;
     description?: string;
     expressions?: string[];
+    imageUrl?: string;
   };
 };
 

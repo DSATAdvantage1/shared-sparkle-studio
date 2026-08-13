@@ -15,8 +15,8 @@ import {
   Edit3,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { questionBankExport20260809 } from "@/lib/questionbank-export-2026-8-9";
-import { questions as staticQuestions, type Question } from "@/lib/test-data";
+import { questionBank20260812 } from "@/lib/questionbank-2026-8-12";
+import { type Question } from "@/lib/test-data";
 
 export const Route = createFileRoute("/questions-bank/reading-writing")({
   head: () => ({
@@ -105,7 +105,7 @@ export function useQuestionBankData() {
   }, []);
 
   return useMemo(
-    () => [...questionBankExport20260809, ...staticQuestions, ...liveQuestions],
+    () => [...questionBank20260812, ...liveQuestions],
     [liveQuestions],
   );
 }

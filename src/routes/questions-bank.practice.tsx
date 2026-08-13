@@ -82,12 +82,31 @@ function PracticePage() {
     const skillFilter = typeof skill === "string" ? skill.trim().toLowerCase() : "";
     const domainFilter = typeof domain === "string" ? domain.trim().toLowerCase() : "";
 
-    return allQuestions.filter((q) => {
-      if (q.module !== sectionKey) return false;
-      if (skillFilter && (q.skill ?? "").toLowerCase() !== skillFilter) return false;
-      if (domainFilter && (q.domain ?? "").toLowerCase() !== domainFilter) return false;
-      return true;
-    });
+    const letters = ["A", "B", "C", "D"];
+
+    return allQuestions
+      .filter((q) => {
+        if (q.module !== sectionKey) return false;
+        if (skillFilter && (q.skill ?? "").toLowerCase() !== skillFilter) return false;
+        if (domainFilter && (q.domain ?? "").toLowerCase() !== domainFilter) return false;
+        return true;
+      })
+      .map((q) => ({
+        id: String(q.id),
+        section: q.module === "math" ? ("MATH" as const) : ("RW" as const),
+        domain: q.domain ?? "",
+        skill: q.skill ?? "",
+        difficulty: q.difficulty ?? "medium",
+        passage: q.passage ?? null,
+        prompt: q.prompt,
+        choices: (q.choices ?? []).map((text, i) => ({
+          letter: letters[i] ?? String(i + 1),
+          text,
+        })),
+        correct_answer: letters[q.correct] ?? "A",
+        explanation: q.explanation ?? null,
+        graph: q.graph,
+      }));
   }, [allQuestions, section, skill, domain]);
 
   const [index, setIndex] = useState(0);
@@ -328,6 +347,17 @@ function PracticePage() {
                 {current.passage}
               </p>
             </div>
+          )}
+
+          {current.graph?.imageUrl && (
+            <figure className="mb-5">
+              <img
+                src={current.graph.imageUrl}
+                alt={current.graph.description ?? "Figure for this question"}
+                loading="lazy"
+                className="mx-auto max-h-[420px] w-auto max-w-full rounded-lg border border-foreground/15 bg-background p-2"
+              />
+            </figure>
           )}
 
           <p className="whitespace-pre-line font-[Georgia,Times_New_Roman,serif] text-[17px] leading-[1.42] text-foreground">
