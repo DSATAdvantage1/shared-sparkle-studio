@@ -124,13 +124,34 @@ function PracticePage() {
 
   const isMath = section === "MATH";
 
+  const progressKey = `qb-progress:${section}:${domain ?? ""}:${skill ?? ""}`;
+
   useEffect(() => {
     setIndex(0);
-    setAnswers({});
-    setMarked({});
-    setRevealed({});
     setEliminated({});
-  }, [section, skill, domain]);
+    let saved: any = null;
+    try {
+      const raw = localStorage.getItem(progressKey);
+      if (raw) saved = JSON.parse(raw);
+    } catch {
+      saved = null;
+    }
+    setAnswers(saved?.answers ?? {});
+    setMarked(saved?.marked ?? {});
+    setRevealed(saved?.revealed ?? {});
+  }, [progressKey]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(
+        progressKey,
+        JSON.stringify({ answers, marked, revealed }),
+      );
+    } catch {
+      // ignore
+    }
+  }, [progressKey, answers, marked, revealed]);
+
 
   const current = questions[index] as any;
 
@@ -285,6 +306,19 @@ function PracticePage() {
               className="pr-10 animate-fade-in"
               style={{ width: "calc(50% - 21px)" }}
             >
+              {current.graph?.imageUrl && (
+                <figure className="mb-5">
+                  <img
+                    src={current.graph.imageUrl}
+                    alt={
+                      current.graph.description ?? "Figure for this question"
+                    }
+                    loading="lazy"
+                    className="mx-auto max-h-[420px] w-auto max-w-full rounded-lg border border-foreground/15 bg-background p-2"
+                  />
+                </figure>
+              )}
+
               <HighlightablePassage
                 text={current.passage ?? ""}
                 highlights={highlights[qid] ?? []}
@@ -341,15 +375,7 @@ function PracticePage() {
 
           <div className="mb-5 h-[2px] w-full bg-foreground/20" />
 
-          {isMath && current.passage && (
-            <div className="relative">
-              <p className="mb-4 whitespace-pre-line font-[Georgia,Times_New_Roman,serif] text-[16px] leading-[1.5] text-foreground">
-                {current.passage}
-              </p>
-            </div>
-          )}
-
-          {current.graph?.imageUrl && (
+          {(isMath || !current.passage) && current.graph?.imageUrl && (
             <figure className="mb-5">
               <img
                 src={current.graph.imageUrl}
@@ -359,6 +385,17 @@ function PracticePage() {
               />
             </figure>
           )}
+
+          {isMath && current.passage && (
+            <div className="relative">
+              <p className="mb-4 whitespace-pre-line font-[Georgia,Times_New_Roman,serif] text-[16px] leading-[1.5] text-foreground">
+                {current.passage}
+              </p>
+            </div>
+          )}
+
+
+
 
           <p className="whitespace-pre-line font-[Georgia,Times_New_Roman,serif] text-[17px] leading-[1.42] text-foreground">
             <strong className="font-extrabold">[DSATAdvantage.com]</strong>{" "}
