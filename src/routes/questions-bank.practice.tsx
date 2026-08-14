@@ -370,7 +370,7 @@ function PracticePage() {
             </div>
           )}
 
-          {current.graph?.imageUrl && (
+          {isMath && current.graph?.imageUrl && (
             <figure className="mb-5">
               <img
                 src={current.graph.imageUrl}
@@ -380,6 +380,8 @@ function PracticePage() {
               />
             </figure>
           )}
+
+
 
           <p className="whitespace-pre-line font-[Georgia,Times_New_Roman,serif] text-[17px] leading-[1.42] text-foreground">
             <strong className="font-extrabold">[DSATAdvantage.com]</strong>{" "}
