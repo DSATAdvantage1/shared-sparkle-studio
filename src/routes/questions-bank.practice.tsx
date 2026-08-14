@@ -306,6 +306,19 @@ function PracticePage() {
               className="pr-10 animate-fade-in"
               style={{ width: "calc(50% - 21px)" }}
             >
+              {current.graph?.imageUrl && (
+                <figure className="mb-5">
+                  <img
+                    src={current.graph.imageUrl}
+                    alt={
+                      current.graph.description ?? "Figure for this question"
+                    }
+                    loading="lazy"
+                    className="mx-auto max-h-[420px] w-auto max-w-full rounded-lg border border-foreground/15 bg-background p-2"
+                  />
+                </figure>
+              )}
+
               <HighlightablePassage
                 text={current.passage ?? ""}
                 highlights={highlights[qid] ?? []}
