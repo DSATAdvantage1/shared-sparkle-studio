@@ -124,13 +124,34 @@ function PracticePage() {
 
   const isMath = section === "MATH";
 
+  const progressKey = `qb-progress:${section}:${domain ?? ""}:${skill ?? ""}`;
+
   useEffect(() => {
     setIndex(0);
-    setAnswers({});
-    setMarked({});
-    setRevealed({});
     setEliminated({});
-  }, [section, skill, domain]);
+    let saved: any = null;
+    try {
+      const raw = localStorage.getItem(progressKey);
+      if (raw) saved = JSON.parse(raw);
+    } catch {
+      saved = null;
+    }
+    setAnswers(saved?.answers ?? {});
+    setMarked(saved?.marked ?? {});
+    setRevealed(saved?.revealed ?? {});
+  }, [progressKey]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(
+        progressKey,
+        JSON.stringify({ answers, marked, revealed }),
+      );
+    } catch {
+      // ignore
+    }
+  }, [progressKey, answers, marked, revealed]);
+
 
   const current = questions[index] as any;
 
