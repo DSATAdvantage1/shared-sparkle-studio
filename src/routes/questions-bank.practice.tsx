@@ -375,14 +375,6 @@ function PracticePage() {
 
           <div className="mb-5 h-[2px] w-full bg-foreground/20" />
 
-          {isMath && current.passage && (
-            <div className="relative">
-              <p className="mb-4 whitespace-pre-line font-[Georgia,Times_New_Roman,serif] text-[16px] leading-[1.5] text-foreground">
-                {current.passage}
-              </p>
-            </div>
-          )}
-
           {(isMath || !current.passage) && current.graph?.imageUrl && (
             <figure className="mb-5">
               <img
@@ -393,6 +385,15 @@ function PracticePage() {
               />
             </figure>
           )}
+
+          {isMath && current.passage && (
+            <div className="relative">
+              <p className="mb-4 whitespace-pre-line font-[Georgia,Times_New_Roman,serif] text-[16px] leading-[1.5] text-foreground">
+                {current.passage}
+              </p>
+            </div>
+          )}
+
 
 
 
