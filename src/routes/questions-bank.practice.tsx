@@ -383,7 +383,7 @@ function PracticePage() {
             </div>
           )}
 
-          {isMath && current.graph?.imageUrl && (
+          {(isMath || !current.passage) && current.graph?.imageUrl && (
             <figure className="mb-5">
               <img
                 src={current.graph.imageUrl}
