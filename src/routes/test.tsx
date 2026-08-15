@@ -707,9 +707,9 @@ function TestPage() {
               : { width: `calc(${100 - splitPct}% - 21px)` }
           }
         >
-          <div className="mb-0 flex items-stretch justify-between bg-slate-100 dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/80 rounded-t-lg p-1 px-2">
-            <div className="flex items-stretch gap-3">
-              <span className="flex h-[32px] w-[28px] items-center justify-center bg-slate-900 dark:bg-slate-200 text-[17px] font-bold leading-none text-white dark:text-slate-900 rounded">
+          <div className="mb-0 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <span className="flex h-[30px] w-[30px] items-center justify-center bg-slate-900 dark:bg-slate-200 text-[17px] font-bold leading-none text-white dark:text-slate-900 rounded-[3px]">
                 {index + 1}
               </span>
               <button

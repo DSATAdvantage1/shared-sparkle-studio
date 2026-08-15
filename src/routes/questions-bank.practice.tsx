@@ -398,7 +398,7 @@ function PracticePage() {
 
 
           <p className="whitespace-pre-line font-[Georgia,Times_New_Roman,serif] text-[17px] leading-[1.42] text-foreground">
-            <strong className="font-extrabold">[DSATAdvantage.com]</strong>{" "}
+            <strong className="font-extrabold">[@DSAT_Advantage]</strong>{" "}
             {current.prompt}
           </p>
 
