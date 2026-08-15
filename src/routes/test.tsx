@@ -742,6 +742,7 @@ function TestPage() {
           <div className="mb-5 dsat-accent-strip" />
 
           <p className="font-[Georgia,Times_New_Roman,serif] whitespace-pre-line text-[17px] leading-[1.42] text-foreground">
+            <strong className="font-extrabold">[@DSAT_Advantage]</strong>{" "}
             {current.prompt}
           </p>
 
