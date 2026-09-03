@@ -223,7 +223,7 @@ function TestPage() {
     try {
       localStorage.setItem(
         storageKey,
-        JSON.stringify({ moduleKey, index, answers, marked, timeLeft }),
+        JSON.stringify({ moduleKey, index, answers, textAnswers, marked, timeLeft }),
       );
       return true;
     } catch {
