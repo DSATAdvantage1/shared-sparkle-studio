@@ -101,6 +101,9 @@ function TestPage() {
   const [answers, setAnswers] = useState<Record<string | number, number | undefined>>(
     {},
   );
+  const [textAnswers, setTextAnswers] = useState<Record<string | number, string>>(
+    {},
+  );
   const [marked, setMarked] = useState<Record<string | number, boolean>>({});
   const [eliminated, setEliminated] = useState<Record<string | number, Set<number>>>({});
   const [timeLeft, setTimeLeft] = useState(26 * 60 + 17);
