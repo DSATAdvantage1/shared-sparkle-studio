@@ -209,6 +209,7 @@ function TestPage() {
       if (saved.moduleKey) setModuleKey(saved.moduleKey);
       if (typeof saved.index === "number") setIndex(saved.index);
       if (saved.answers) setAnswers(saved.answers);
+      if (saved.textAnswers) setTextAnswers(saved.textAnswers);
       if (saved.marked) setMarked(saved.marked);
       if (typeof saved.timeLeft === "number") setTimeLeft(saved.timeLeft);
       toast.success("Resumed your saved test");
