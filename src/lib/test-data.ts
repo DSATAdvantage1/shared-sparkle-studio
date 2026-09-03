@@ -4,7 +4,11 @@ export type Question = {
   passage?: string;
   prompt: string;
   choices: string[];
-  correct: number; // index
+  correct: number; // index (-1 for student-produced response)
+  /** "mc" (default) or "spr" for student-produced response */
+  answerType?: "mc" | "spr";
+  /** Accepted answer for student-produced-response questions */
+  correctText?: string | null;
   explanation: string;
   domain?: string;
   skill?: string;

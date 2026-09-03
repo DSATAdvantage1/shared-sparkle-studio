@@ -101,6 +101,9 @@ function TestPage() {
   const [answers, setAnswers] = useState<Record<string | number, number | undefined>>(
     {},
   );
+  const [textAnswers, setTextAnswers] = useState<Record<string | number, string>>(
+    {},
+  );
   const [marked, setMarked] = useState<Record<string | number, boolean>>({});
   const [eliminated, setEliminated] = useState<Record<string | number, Set<number>>>({});
   const [timeLeft, setTimeLeft] = useState(26 * 60 + 17);
@@ -206,6 +209,7 @@ function TestPage() {
       if (saved.moduleKey) setModuleKey(saved.moduleKey);
       if (typeof saved.index === "number") setIndex(saved.index);
       if (saved.answers) setAnswers(saved.answers);
+      if (saved.textAnswers) setTextAnswers(saved.textAnswers);
       if (saved.marked) setMarked(saved.marked);
       if (typeof saved.timeLeft === "number") setTimeLeft(saved.timeLeft);
       toast.success("Resumed your saved test");
@@ -219,7 +223,7 @@ function TestPage() {
     try {
       localStorage.setItem(
         storageKey,
-        JSON.stringify({ moduleKey, index, answers, marked, timeLeft }),
+        JSON.stringify({ moduleKey, index, answers, textAnswers, marked, timeLeft }),
       );
       return true;
     } catch {
