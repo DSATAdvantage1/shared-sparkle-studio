@@ -90,6 +90,25 @@ function formatTime(sec: number) {
   return `${m}:${s.toString().padStart(2, "0")}`;
 }
 
+function isSpr(q: Question) {
+  return q.answerType === "spr" || q.correct === -1;
+}
+
+function normalizeSpr(value: string) {
+  return value.trim().replace(/[,\s$%]/g, "").toLowerCase();
+}
+
+function sprMatches(given: string | undefined, expected: string | null | undefined) {
+  if (!given || !expected) return false;
+  const a = normalizeSpr(given);
+  const b = normalizeSpr(expected);
+  if (!a) return false;
+  if (a === b) return true;
+  const na = Number(a);
+  const nb = Number(b);
+  return Number.isFinite(na) && Number.isFinite(nb) && Math.abs(na - nb) < 1e-9;
+}
+
 function TestPage() {
   const getPublishedTestQuestionsFn = useServerFn(getPublishedTestQuestions);
 
@@ -399,14 +418,52 @@ function TestPage() {
   }
 
   if (stage === "results") {
+    const isRight = (q: Question) =>
+      isSpr(q)
+        ? sprMatches(textAnswers[q.id], q.correctText)
+        : answers[q.id] === q.correct;
+
     const score = activeQuestions.reduce(
-      (acc, q) => acc + (answers[q.id] === q.correct ? 1 : 0),
+      (acc, q) => acc + (isRight(q) ? 1 : 0),
       0,
     );
 
     const pct = activeQuestions.length
       ? Math.round((score / activeQuestions.length) * 100)
       : 0;
+
+    const sectionStats = (["rw", "math"] as const).map((m) => {
+      const qs = activeQuestions.filter((q) => q.module === m);
+      const right = qs.filter(isRight).length;
+      const scaled = qs.length
+        ? Math.round((200 + (600 * right) / qs.length) / 10) * 10
+        : 0;
+      return { module: m, total: qs.length, right, scaled };
+    });
+    const scaledTotal = sectionStats.reduce(
+      (a, s) => a + (s.total ? s.scaled : 0),
+      0,
+    );
+
+    const domainMap = new Map<
+      string,
+      { module: string; right: number; total: number }
+    >();
+    for (const q of activeQuestions) {
+      const key = `${q.module}|${q.domain ?? "Other"}`;
+      const row = domainMap.get(key) ?? {
+        module: q.module,
+        right: 0,
+        total: 0,
+      };
+      row.total += 1;
+      if (isRight(q)) row.right += 1;
+      domainMap.set(key, row);
+    }
+    const domainRows = Array.from(domainMap.entries()).map(([key, v]) => ({
+      name: key.split("|")[1],
+      ...v,
+    }));
 
     return (
       <div className="min-h-screen bg-slate-50/50 dark:bg-slate-950/50 test-page-container flex flex-col">
@@ -424,12 +481,65 @@ function TestPage() {
                 </span>
               </p>
               <p className="mt-3 text-lg font-medium text-sky-100">{pct}% of questions correct</p>
+              <p className="mt-4 text-2xl font-bold tracking-tight">
+                Estimated scaled score: {scaledTotal}
+                <span className="text-base font-medium opacity-70">/1600</span>
+              </p>
+            </div>
+
+            <div className="border-b border-slate-100 dark:border-slate-800 p-8">
+              <h2 className="text-sm font-bold uppercase tracking-widest text-slate-400">
+                Score by category
+              </h2>
+              <div className="mt-5 grid gap-6 sm:grid-cols-2">
+                {sectionStats
+                  .filter((s) => s.total > 0)
+                  .map((s) => (
+                    <div key={s.module}>
+                      <div className="flex items-baseline justify-between">
+                        <p className="font-semibold text-slate-800 dark:text-slate-200">
+                          {moduleInfo[s.module].short}
+                        </p>
+                        <p className="text-sm font-semibold text-sky-600 dark:text-sky-400">
+                          {s.scaled} · {s.right}/{s.total}
+                        </p>
+                      </div>
+                      <div className="mt-3 space-y-2">
+                        {domainRows
+                          .filter((d) => d.module === s.module)
+                          .sort((a, b) => a.name.localeCompare(b.name))
+                          .map((d) => (
+                            <div key={d.name}>
+                              <div className="flex items-center justify-between gap-3 text-xs">
+                                <span className="text-slate-600 dark:text-slate-400">
+                                  {d.name}
+                                </span>
+                                <span className="font-semibold text-slate-700 dark:text-slate-300">
+                                  {d.right}/{d.total}
+                                </span>
+                              </div>
+                              <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800">
+                                <div
+                                  className="h-full rounded-full bg-sky-500"
+                                  style={{
+                                    width: `${Math.round((d.right / d.total) * 100)}%`,
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                  ))}
+              </div>
             </div>
 
             <div className="space-y-6 p-8">
               {activeQuestions.map((q, i) => {
                 const userAns = answers[q.id];
-                const isCorrect = userAns === q.correct;
+                const spr = isSpr(q);
+                const userText = textAnswers[q.id];
+                const isCorrect = isRight(q);
                 return (
                   <div
                     key={q.id}
@@ -449,19 +559,41 @@ function TestPage() {
                         </span>
                       )}
                     </div>
+                    {q.graph?.imageUrl && (
+                      <img
+                        src={q.graph.imageUrl}
+                        alt={q.graph.description ?? "Question figure"}
+                        loading="lazy"
+                        className="mt-4 w-full rounded-lg border border-slate-200 dark:border-slate-800 bg-white"
+                      />
+                    )}
                     {q.passage && (
                       <p className="mt-4 whitespace-pre-line text-sm italic font-serif leading-relaxed text-slate-500 dark:text-slate-400 border-l-2 border-sky-500/25 pl-4">
                         {q.passage}
                       </p>
                     )}
-                    <p className="mt-4 whitespace-pre-line text-[15px] font-medium leading-relaxed text-slate-800 dark:text-slate-200">
-                      {q.prompt}
-                    </p>
+                    {q.prompt && (
+                      <p className="mt-4 whitespace-pre-line text-[15px] font-medium leading-relaxed text-slate-800 dark:text-slate-200">
+                        {q.prompt}
+                      </p>
+                    )}
 
                     <div className="mt-4 space-y-2 text-sm border-t border-slate-100 dark:border-slate-800 pt-4">
                       <p className="flex items-center gap-2">
-                        <span className="text-slate-400 dark:text-slate-500 font-medium">Your choice:</span>
-                        {userAns !== undefined ? (
+                        <span className="text-slate-400 dark:text-slate-500 font-medium">Your answer:</span>
+                        {spr ? (
+                          userText ? (
+                            <span
+                              className={`font-semibold ${
+                                isCorrect ? "text-emerald-600 dark:text-emerald-450" : "text-rose-650 dark:text-rose-400"
+                              }`}
+                            >
+                              {userText}
+                            </span>
+                          ) : (
+                            <span className="text-slate-400 dark:text-slate-500 italic">— left blank</span>
+                          )
+                        ) : userAns !== undefined ? (
                           <span
                             className={`font-semibold ${
                               isCorrect ? "text-emerald-600 dark:text-emerald-450" : "text-rose-650 dark:text-rose-400"
@@ -477,15 +609,21 @@ function TestPage() {
                         <p className="flex items-center gap-2">
                           <span className="text-slate-400 dark:text-slate-500 font-medium">Correct answer:</span>
                           <span className="font-semibold text-emerald-600 dark:text-emerald-450">
-                            {String.fromCharCode(65 + q.correct)}. {q.choices[q.correct]}
+                            {spr
+                              ? (q.correctText ?? "—")
+                              : q.correct >= 0
+                                ? `${String.fromCharCode(65 + q.correct)}. ${q.choices[q.correct]}`
+                                : "—"}
                           </span>
                         </p>
                       )}
                     </div>
 
-                    <p className="mt-4 rounded-xl bg-sky-50/50 dark:bg-sky-950/10 border border-sky-100/30 p-4 text-[14px] leading-relaxed text-slate-700 dark:text-slate-350">
-                      <strong className="font-bold text-sky-800 dark:text-sky-400 block mb-1">Explanation:</strong> {q.explanation}
-                    </p>
+                    {q.explanation && (
+                      <p className="mt-4 rounded-xl bg-sky-50/50 dark:bg-sky-950/10 border border-sky-100/30 p-4 text-[14px] leading-relaxed text-slate-700 dark:text-slate-350">
+                        <strong className="font-bold text-sky-800 dark:text-sky-400 block mb-1">Explanation:</strong> {q.explanation}
+                      </p>
+                    )}
                   </div>
                 );
               })}
