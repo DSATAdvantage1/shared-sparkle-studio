@@ -90,6 +90,25 @@ function formatTime(sec: number) {
   return `${m}:${s.toString().padStart(2, "0")}`;
 }
 
+function isSpr(q: Question) {
+  return q.answerType === "spr" || q.correct === -1;
+}
+
+function normalizeSpr(value: string) {
+  return value.trim().replace(/[,\s$%]/g, "").toLowerCase();
+}
+
+function sprMatches(given: string | undefined, expected: string | null | undefined) {
+  if (!given || !expected) return false;
+  const a = normalizeSpr(given);
+  const b = normalizeSpr(expected);
+  if (!a) return false;
+  if (a === b) return true;
+  const na = Number(a);
+  const nb = Number(b);
+  return Number.isFinite(na) && Number.isFinite(nb) && Math.abs(na - nb) < 1e-9;
+}
+
 function TestPage() {
   const getPublishedTestQuestionsFn = useServerFn(getPublishedTestQuestions);
 
