@@ -418,14 +418,52 @@ function TestPage() {
   }
 
   if (stage === "results") {
+    const isRight = (q: Question) =>
+      isSpr(q)
+        ? sprMatches(textAnswers[q.id], q.correctText)
+        : answers[q.id] === q.correct;
+
     const score = activeQuestions.reduce(
-      (acc, q) => acc + (answers[q.id] === q.correct ? 1 : 0),
+      (acc, q) => acc + (isRight(q) ? 1 : 0),
       0,
     );
 
     const pct = activeQuestions.length
       ? Math.round((score / activeQuestions.length) * 100)
       : 0;
+
+    const sectionStats = (["rw", "math"] as const).map((m) => {
+      const qs = activeQuestions.filter((q) => q.module === m);
+      const right = qs.filter(isRight).length;
+      const scaled = qs.length
+        ? Math.round((200 + (600 * right) / qs.length) / 10) * 10
+        : 0;
+      return { module: m, total: qs.length, right, scaled };
+    });
+    const scaledTotal = sectionStats.reduce(
+      (a, s) => a + (s.total ? s.scaled : 0),
+      0,
+    );
+
+    const domainMap = new Map<
+      string,
+      { module: string; right: number; total: number }
+    >();
+    for (const q of activeQuestions) {
+      const key = `${q.module}|${q.domain ?? "Other"}`;
+      const row = domainMap.get(key) ?? {
+        module: q.module,
+        right: 0,
+        total: 0,
+      };
+      row.total += 1;
+      if (isRight(q)) row.right += 1;
+      domainMap.set(key, row);
+    }
+    const domainRows = Array.from(domainMap.entries()).map(([key, v]) => ({
+      name: key.split("|")[1],
+      ...v,
+    }));
 
     return (
       <div className="min-h-screen bg-slate-50/50 dark:bg-slate-950/50 test-page-container flex flex-col">
