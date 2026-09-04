@@ -481,6 +481,57 @@ function TestPage() {
                 </span>
               </p>
               <p className="mt-3 text-lg font-medium text-sky-100">{pct}% of questions correct</p>
+              <p className="mt-4 text-2xl font-bold tracking-tight">
+                Estimated scaled score: {scaledTotal}
+                <span className="text-base font-medium opacity-70">/1600</span>
+              </p>
+            </div>
+
+            <div className="border-b border-slate-100 dark:border-slate-800 p-8">
+              <h2 className="text-sm font-bold uppercase tracking-widest text-slate-400">
+                Score by category
+              </h2>
+              <div className="mt-5 grid gap-6 sm:grid-cols-2">
+                {sectionStats
+                  .filter((s) => s.total > 0)
+                  .map((s) => (
+                    <div key={s.module}>
+                      <div className="flex items-baseline justify-between">
+                        <p className="font-semibold text-slate-800 dark:text-slate-200">
+                          {moduleInfo[s.module].short}
+                        </p>
+                        <p className="text-sm font-semibold text-sky-600 dark:text-sky-400">
+                          {s.scaled} · {s.right}/{s.total}
+                        </p>
+                      </div>
+                      <div className="mt-3 space-y-2">
+                        {domainRows
+                          .filter((d) => d.module === s.module)
+                          .sort((a, b) => a.name.localeCompare(b.name))
+                          .map((d) => (
+                            <div key={d.name}>
+                              <div className="flex items-center justify-between gap-3 text-xs">
+                                <span className="text-slate-600 dark:text-slate-400">
+                                  {d.name}
+                                </span>
+                                <span className="font-semibold text-slate-700 dark:text-slate-300">
+                                  {d.right}/{d.total}
+                                </span>
+                              </div>
+                              <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800">
+                                <div
+                                  className="h-full rounded-full bg-sky-500"
+                                  style={{
+                                    width: `${Math.round((d.right / d.total) * 100)}%`,
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                  ))}
+              </div>
             </div>
 
             <div className="space-y-6 p-8">
