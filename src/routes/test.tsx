@@ -537,7 +537,9 @@ function TestPage() {
             <div className="space-y-6 p-8">
               {activeQuestions.map((q, i) => {
                 const userAns = answers[q.id];
-                const isCorrect = userAns === q.correct;
+                const spr = isSpr(q);
+                const userText = textAnswers[q.id];
+                const isCorrect = isRight(q);
                 return (
                   <div
                     key={q.id}
