@@ -619,9 +619,11 @@ function TestPage() {
                       )}
                     </div>
 
-                    <p className="mt-4 rounded-xl bg-sky-50/50 dark:bg-sky-950/10 border border-sky-100/30 p-4 text-[14px] leading-relaxed text-slate-700 dark:text-slate-350">
-                      <strong className="font-bold text-sky-800 dark:text-sky-400 block mb-1">Explanation:</strong> {q.explanation}
-                    </p>
+                    {q.explanation && (
+                      <p className="mt-4 rounded-xl bg-sky-50/50 dark:bg-sky-950/10 border border-sky-100/30 p-4 text-[14px] leading-relaxed text-slate-700 dark:text-slate-350">
+                        <strong className="font-bold text-sky-800 dark:text-sky-400 block mb-1">Explanation:</strong> {q.explanation}
+                      </p>
+                    )}
                   </div>
                 );
               })}
