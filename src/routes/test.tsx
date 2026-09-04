@@ -559,19 +559,41 @@ function TestPage() {
                         </span>
                       )}
                     </div>
+                    {q.graph?.imageUrl && (
+                      <img
+                        src={q.graph.imageUrl}
+                        alt={q.graph.description ?? "Question figure"}
+                        loading="lazy"
+                        className="mt-4 w-full rounded-lg border border-slate-200 dark:border-slate-800 bg-white"
+                      />
+                    )}
                     {q.passage && (
                       <p className="mt-4 whitespace-pre-line text-sm italic font-serif leading-relaxed text-slate-500 dark:text-slate-400 border-l-2 border-sky-500/25 pl-4">
                         {q.passage}
                       </p>
                     )}
-                    <p className="mt-4 whitespace-pre-line text-[15px] font-medium leading-relaxed text-slate-800 dark:text-slate-200">
-                      {q.prompt}
-                    </p>
+                    {q.prompt && (
+                      <p className="mt-4 whitespace-pre-line text-[15px] font-medium leading-relaxed text-slate-800 dark:text-slate-200">
+                        {q.prompt}
+                      </p>
+                    )}
 
                     <div className="mt-4 space-y-2 text-sm border-t border-slate-100 dark:border-slate-800 pt-4">
                       <p className="flex items-center gap-2">
-                        <span className="text-slate-400 dark:text-slate-500 font-medium">Your choice:</span>
-                        {userAns !== undefined ? (
+                        <span className="text-slate-400 dark:text-slate-500 font-medium">Your answer:</span>
+                        {spr ? (
+                          userText ? (
+                            <span
+                              className={`font-semibold ${
+                                isCorrect ? "text-emerald-600 dark:text-emerald-450" : "text-rose-650 dark:text-rose-400"
+                              }`}
+                            >
+                              {userText}
+                            </span>
+                          ) : (
+                            <span className="text-slate-400 dark:text-slate-500 italic">— left blank</span>
+                          )
+                        ) : userAns !== undefined ? (
                           <span
                             className={`font-semibold ${
                               isCorrect ? "text-emerald-600 dark:text-emerald-450" : "text-rose-650 dark:text-rose-400"
@@ -587,7 +609,11 @@ function TestPage() {
                         <p className="flex items-center gap-2">
                           <span className="text-slate-400 dark:text-slate-500 font-medium">Correct answer:</span>
                           <span className="font-semibold text-emerald-600 dark:text-emerald-450">
-                            {String.fromCharCode(65 + q.correct)}. {q.choices[q.correct]}
+                            {spr
+                              ? (q.correctText ?? "—")
+                              : q.correct >= 0
+                                ? `${String.fromCharCode(65 + q.correct)}. ${q.choices[q.correct]}`
+                                : "—"}
                           </span>
                         </p>
                       )}
