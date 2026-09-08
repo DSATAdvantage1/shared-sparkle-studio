@@ -885,12 +885,42 @@ function TestPage() {
 
           <div className="mb-5 dsat-accent-strip" />
 
-          <p className="font-[Georgia,Times_New_Roman,serif] whitespace-pre-line text-[17px] leading-[1.42] text-foreground">
-            <strong className="font-extrabold">[@DSAT_Advantage]</strong>{" "}
-            {current.prompt}
-          </p>
+          {current.graph?.imageUrl && (
+            <img
+              src={current.graph.imageUrl}
+              alt={current.graph.description ?? "Question figure"}
+              loading="lazy"
+              className="mb-4 w-full rounded-[4px] border border-slate-200 dark:border-slate-800 bg-white"
+            />
+          )}
 
+          {current.prompt?.trim() && (
+            <p className="font-[Georgia,Times_New_Roman,serif] whitespace-pre-line text-[17px] leading-[1.42] text-foreground">
+              <strong className="font-extrabold">[@DSAT_Advantage]</strong>{" "}
+              {current.prompt}
+            </p>
+          )}
+
+          {currentIsSpr ? (
+            <div className="mt-5">
+              <label className="mb-2 block text-[13px] font-semibold text-slate-600 dark:text-slate-300">
+                Student-produced response
+              </label>
+              <input
+                value={textAnswers[current.id] ?? ""}
+                onChange={(e) =>
+                  setTextAnswers((prev) => ({
+                    ...prev,
+                    [current.id]: e.target.value,
+                  }))
+                }
+                placeholder="Type your answer"
+                className="h-[46px] w-[240px] rounded-[4px] border border-slate-300 dark:border-slate-700 bg-background px-3 font-[Georgia,Times_New_Roman,serif] text-[17px] text-foreground outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500/50"
+              />
+            </div>
+          ) : (
           <div className="mt-5 space-y-[10px]">
+
             {current.choices.map((choice, i) => {
               const isSelected = userChoice === i;
               const isElim = elimSet.has(i);
