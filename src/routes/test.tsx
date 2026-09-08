@@ -686,6 +686,8 @@ function TestPage() {
   const userChoice = answers[current.id];
   const isMarked = !!marked[current.id];
   const elimSet = eliminated[current.id] ?? new Set<number>();
+  const currentIsSpr = isSpr(current);
+
 
   return (
     <div
