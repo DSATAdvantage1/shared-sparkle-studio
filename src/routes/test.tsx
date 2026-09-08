@@ -697,7 +697,10 @@ function TestPage() {
       <header className="grid grid-cols-[1fr_auto_1fr] items-start px-7 pt-4 pb-1">
         <div>
           <p className="text-[15px] font-semibold leading-none text-foreground">
-            Section 1, Module 2: Reading and Writing
+            {moduleKey === "math"
+              ? "Section 2: Math"
+              : "Section 1: Reading and Writing"}
+
           </p>
           <button className="mt-3 inline-flex items-center gap-1 text-[13px] text-foreground hover:underline">
             Directions{" "}
