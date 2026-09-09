@@ -125,7 +125,7 @@ function TestPage() {
   );
   const [marked, setMarked] = useState<Record<string | number, boolean>>({});
   const [eliminated, setEliminated] = useState<Record<string | number, Set<number>>>({});
-  const [timeLeft, setTimeLeft] = useState(26 * 60 + 17);
+  const [timeLeft, setTimeLeft] = useState(moduleInfo.rw.durationSec);
   const [eliminatorOn, setEliminatorOn] = useState(false);
   const [highlights, setHighlights] = useState<Record<string | number, Highlight[]>>({});
   const [highlightingOn, setHighlightingOn] = useState(false);
