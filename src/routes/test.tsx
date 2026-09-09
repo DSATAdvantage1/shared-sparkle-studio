@@ -320,7 +320,7 @@ function TestPage() {
     setStage("test");
     setModuleKey("rw");
     setIndex(0);
-    setTimeLeft(26 * 60 + 17);
+    setTimeLeft(moduleInfo.rw.durationSec);
   }
 
   function handleFinishModule() {
@@ -652,7 +652,7 @@ function TestPage() {
                   setStage("test");
                   setModuleKey("rw");
                   setIndex(0);
-                  setTimeLeft(26 * 60 + 17);
+                  setTimeLeft(moduleInfo.rw.durationSec);
                 }}
               >
                 Retake Test
