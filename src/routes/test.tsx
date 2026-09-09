@@ -225,12 +225,22 @@ function TestPage() {
       const raw = localStorage.getItem(storageKey);
       if (!raw) return;
       const saved = JSON.parse(raw);
-      if (saved.moduleKey) setModuleKey(saved.moduleKey);
-      if (typeof saved.index === "number") setIndex(saved.index);
+      if (saved.moduleKey === "rw" || saved.moduleKey === "math")
+        setModuleKey(saved.moduleKey);
+      if (typeof saved.index === "number" && saved.index >= 0)
+        setIndex(saved.index);
       if (saved.answers) setAnswers(saved.answers);
       if (saved.textAnswers) setTextAnswers(saved.textAnswers);
       if (saved.marked) setMarked(saved.marked);
-      if (typeof saved.timeLeft === "number") setTimeLeft(saved.timeLeft);
+      // Never resume with an expired clock: that would end the module instantly.
+      if (typeof saved.timeLeft === "number" && saved.timeLeft > 30)
+        setTimeLeft(saved.timeLeft);
+      else
+        setTimeLeft(
+          saved.moduleKey === "math"
+            ? moduleInfo.math.durationSec
+            : moduleInfo.rw.durationSec,
+        );
       toast.success("Resumed your saved test");
     } catch {
       // ignore
