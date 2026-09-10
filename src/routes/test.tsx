@@ -657,9 +657,9 @@ function TestPage() {
                   setMarked({});
                   setEliminated({});
                   setStage("test");
-                  setModuleKey("rw");
+                  setPartIdx(0);
                   setIndex(0);
-                  setTimeLeft(moduleInfo.rw.durationSec);
+                  setTimeLeft(durationOfPart(0));
                 }}
               >
                 Retake Test
@@ -715,8 +715,8 @@ function TestPage() {
         <div>
           <p className="text-[15px] font-semibold leading-none text-foreground">
             {moduleKey === "math"
-              ? "Section 2: Math"
-              : "Section 1: Reading and Writing"}
+              ? `Section 2: Math — Module ${activePart?.part ?? 1}`
+              : `Section 1: Reading and Writing — Module ${activePart?.part ?? 1}`}
 
           </p>
           <button className="mt-3 inline-flex items-center gap-1 text-[13px] text-foreground hover:underline">
@@ -1013,6 +1013,7 @@ function TestPage() {
                 <div className="flex items-center justify-between border-b border-foreground/15 px-4 py-2">
                   <p className="text-[14px] font-semibold text-foreground">
                     {moduleKey === "rw" ? "Reading and Writing" : "Math"}
+                    {` — Module ${activePart?.part ?? 1}`}
                   </p>
                   <button
                     onClick={() => setNavigatorOpen(false)}
@@ -1111,10 +1112,9 @@ function TestPage() {
             onClick={next}
             className="h-[34px] rounded-full bg-[oklch(0.56_0.2_264)] px-8 text-[14px] font-semibold text-primary-foreground hover:opacity-95"
           >
-            {index === moduleQuestions.length - 1
-              ? moduleKey === "rw"
-                ? "Next"
-                : "Finish"
+            {index === moduleQuestions.length - 1 &&
+            partIdx === parts.length - 1
+              ? "Finish"
               : "Next"}
           </Button>
         </div>
