@@ -115,7 +115,7 @@ function TestPage() {
   const transitionReq = consumeTransition();
 
   const [stage, setStage] = useState<"intro" | "test" | "results">("test");
-  const [moduleKey, setModuleKey] = useState<ModuleKey>("rw");
+  const [partIdx, setPartIdx] = useState(0);
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string | number, number | undefined>>(
     {},
@@ -225,8 +225,8 @@ function TestPage() {
       const raw = localStorage.getItem(storageKey);
       if (!raw) return;
       const saved = JSON.parse(raw);
-      if (saved.moduleKey === "rw" || saved.moduleKey === "math")
-        setModuleKey(saved.moduleKey);
+      if (typeof saved.partIdx === "number" && saved.partIdx >= 0)
+        setPartIdx(saved.partIdx);
       if (typeof saved.index === "number" && saved.index >= 0)
         setIndex(saved.index);
       if (saved.answers) setAnswers(saved.answers);
@@ -252,7 +252,7 @@ function TestPage() {
     try {
       localStorage.setItem(
         storageKey,
-        JSON.stringify({ moduleKey, index, answers, textAnswers, marked, timeLeft }),
+        JSON.stringify({ moduleKey, partIdx, index, answers, textAnswers, marked, timeLeft }),
       );
       return true;
     } catch {
@@ -269,26 +269,33 @@ function TestPage() {
     }
   }
 
-  const moduleQuestions = useMemo(
-    () => activeQuestions.filter((q) => q.module === moduleKey),
-    [moduleKey, activeQuestions],
-  );
-
-  const availableModules = useMemo(() => {
-    const modules = new Set(activeQuestions.map((q) => q.module));
-    return {
-      rw: modules.has("rw"),
-      math: modules.has("math"),
+  // Split each section into two official-length modules:
+  // Reading & Writing = 27 questions per module, Math = 22 per module.
+  const parts = useMemo(() => {
+    const out: { key: ModuleKey; part: number; questions: Question[] }[] = [];
+    const addSection = (key: ModuleKey, size: number) => {
+      const all = activeQuestions.filter((q) => q.module === key);
+      for (let i = 0; i < 2; i++) {
+        const slice = all.slice(i * size, (i + 1) * size);
+        if (slice.length) out.push({ key, part: i + 1, questions: slice });
+      }
     };
+    addSection("rw", 27);
+    addSection("math", 22);
+    return out;
   }, [activeQuestions]);
+
+  const activePart = parts[Math.min(partIdx, Math.max(parts.length - 1, 0))];
+  const moduleKey: ModuleKey = activePart?.key ?? "rw";
+  const moduleQuestions = activePart?.questions ?? [];
 
   const current: Question | undefined = moduleQuestions[index];
 
   useEffect(() => {
-    if (activeQuestions.length === 0) return;
+    if (parts.length === 0) return;
 
-    if (!availableModules[moduleKey]) {
-      setModuleKey(availableModules.rw ? "rw" : "math");
+    if (partIdx > parts.length - 1) {
+      setPartIdx(0);
       setIndex(0);
       return;
     }
@@ -296,13 +303,7 @@ function TestPage() {
     if (index > Math.max(moduleQuestions.length - 1, 0)) {
       setIndex(0);
     }
-  }, [
-    activeQuestions.length,
-    availableModules,
-    index,
-    moduleKey,
-    moduleQuestions.length,
-  ]);
+  }, [parts.length, partIdx, index, moduleQuestions.length]);
 
   useEffect(() => {
     if (stage !== "test") return;
@@ -316,22 +317,28 @@ function TestPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stage, timeLeft]);
 
+  function durationOfPart(i: number) {
+    return moduleInfo[parts[i]?.key ?? "rw"].durationSec;
+  }
+
   function startTest() {
     setStage("test");
-    setModuleKey("rw");
+    setPartIdx(0);
     setIndex(0);
-    setTimeLeft(moduleInfo.rw.durationSec);
+    setTimeLeft(durationOfPart(0));
   }
 
   function handleFinishModule() {
-    if (moduleKey === "rw" && availableModules.math) {
-      setModuleKey("math");
+    if (partIdx < parts.length - 1) {
+      const nextIdx = partIdx + 1;
+      setPartIdx(nextIdx);
       setIndex(0);
-      setTimeLeft(moduleInfo.math.durationSec);
+      setTimeLeft(durationOfPart(nextIdx));
     } else {
       setStage("results");
     }
   }
+
 
   function selectChoice(i: number) {
     if (!current) return;
@@ -650,9 +657,9 @@ function TestPage() {
                   setMarked({});
                   setEliminated({});
                   setStage("test");
-                  setModuleKey("rw");
+                  setPartIdx(0);
                   setIndex(0);
-                  setTimeLeft(moduleInfo.rw.durationSec);
+                  setTimeLeft(durationOfPart(0));
                 }}
               >
                 Retake Test
@@ -708,8 +715,8 @@ function TestPage() {
         <div>
           <p className="text-[15px] font-semibold leading-none text-foreground">
             {moduleKey === "math"
-              ? "Section 2: Math"
-              : "Section 1: Reading and Writing"}
+              ? `Section 2: Math — Module ${activePart?.part ?? 1}`
+              : `Section 1: Reading and Writing — Module ${activePart?.part ?? 1}`}
 
           </p>
           <button className="mt-3 inline-flex items-center gap-1 text-[13px] text-foreground hover:underline">
@@ -1006,6 +1013,7 @@ function TestPage() {
                 <div className="flex items-center justify-between border-b border-foreground/15 px-4 py-2">
                   <p className="text-[14px] font-semibold text-foreground">
                     {moduleKey === "rw" ? "Reading and Writing" : "Math"}
+                    {` — Module ${activePart?.part ?? 1}`}
                   </p>
                   <button
                     onClick={() => setNavigatorOpen(false)}
@@ -1104,10 +1112,9 @@ function TestPage() {
             onClick={next}
             className="h-[34px] rounded-full bg-[oklch(0.56_0.2_264)] px-8 text-[14px] font-semibold text-primary-foreground hover:opacity-95"
           >
-            {index === moduleQuestions.length - 1
-              ? moduleKey === "rw"
-                ? "Next"
-                : "Finish"
+            {index === moduleQuestions.length - 1 &&
+            partIdx === parts.length - 1
+              ? "Finish"
               : "Next"}
           </Button>
         </div>
