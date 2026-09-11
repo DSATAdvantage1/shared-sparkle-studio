@@ -17,6 +17,7 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { questionBank20260812 } from "@/lib/questionbank-2026-8-12";
 import { type Question } from "@/lib/test-data";
+import { requestTransition } from "./pageTransitionStore";
 
 export const Route = createFileRoute("/questions-bank/reading-writing")({
   head: () => ({
@@ -443,6 +444,7 @@ export function BankPage({
                             />
                             <Link
                               to="/questions-bank/practice"
+                               onClick={() => requestTransition("question-bank")}
                               search={{
                                 section:
                                   sectionTitle === "Math" ? "MATH" : "RW",
