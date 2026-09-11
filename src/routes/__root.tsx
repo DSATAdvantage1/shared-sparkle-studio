@@ -29,6 +29,7 @@ import logo from "@/assets/dsat-advantage-logo.png";
 import { TextSelectionProvider } from "@/hooks/useTextSelection";
 import { ViewMeaningButton } from "@/components/text-selection/ViewMeaningButton";
 import { WordMeaningPopup } from "@/components/text-selection/WordMeaningPopup";
+import { LogoTransitionOverlay } from "@/components/transitions/LogoTransition";
 
 import appCss from "../styles.css?url";
 
@@ -358,7 +359,9 @@ function RootComponent() {
     }
   });
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [showLogoTransition, setShowLogoTransition] = useState(false);
   const location = useLocation();
+  const previousPathRef = useRef(location.pathname);
 
   // Persist collapsed state
   useEffect(() => {
@@ -376,7 +379,19 @@ function RootComponent() {
     return () => document.removeEventListener("fullscreenchange", onFsChange);
   }, []);
 
+  useEffect(() => {
+    const previousPath = previousPathRef.current;
+    const enteredTest = location.pathname === "/test" && previousPath !== "/test";
+    const enteredQuestionBank =
+      location.pathname.startsWith("/questions-bank") &&
+      !previousPath.startsWith("/questions-bank");
+
+    if (enteredTest || enteredQuestionBank) setShowLogoTransition(true);
+    previousPathRef.current = location.pathname;
+  }, [location.pathname]);
+
   function toggleFullscreen() {
+    setShowLogoTransition(true);
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen().catch(() => {});
     } else {
@@ -629,6 +644,10 @@ function RootComponent() {
 
       {/* Battery indicator — draggable, position saved */}
       <DraggableBattery />
+
+      {showLogoTransition ? (
+        <LogoTransitionOverlay onDone={() => setShowLogoTransition(false)} />
+      ) : null}
 
     </TextSelectionProvider>
   );

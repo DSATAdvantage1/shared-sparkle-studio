@@ -37,6 +37,7 @@ import { novemberQuestions } from "@/lib/test-data-nov-2025";
 import { getPublishedTestQuestions } from "@/server-fns/admin.functions";
 import { consumeTransition } from "@/routes/pageTransitionStore";
 import { PageTransition1600 } from "@/components/transitions/PageTransition1600";
+import { LogoTransitionOverlay } from "@/components/transitions/LogoTransition";
 import "./test.css";
 
 export const Route = createFileRoute("/test")({
@@ -134,6 +135,7 @@ function TestPage() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [splitPct, setSplitPct] = useState(50);
   const [navigatorOpen, setNavigatorOpen] = useState(false);
+  const [showLogoTransition, setShowLogoTransition] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLElement>(null);
@@ -331,9 +333,12 @@ function TestPage() {
   function handleFinishModule() {
     if (partIdx < parts.length - 1) {
       const nextIdx = partIdx + 1;
-      setPartIdx(nextIdx);
-      setIndex(0);
-      setTimeLeft(durationOfPart(nextIdx));
+      setShowLogoTransition(true);
+      window.setTimeout(() => {
+        setPartIdx(nextIdx);
+        setIndex(0);
+        setTimeLeft(durationOfPart(nextIdx));
+      }, 500);
     } else {
       setStage("results");
     }
@@ -785,7 +790,10 @@ function TestPage() {
                 onClick={() => {
                   if (containerRef.current?.requestFullscreen) {
                     if (document.fullscreenElement) document.exitFullscreen();
-                    else containerRef.current.requestFullscreen();
+                    else {
+                      setShowLogoTransition(true);
+                      containerRef.current.requestFullscreen();
+                    }
                   }
                 }}
                 className="flex w-full items-center gap-2 rounded-sm px-3 py-2 text-left text-sm hover:bg-accent"
@@ -1178,6 +1186,9 @@ function TestPage() {
           </div>
         </div>
       )}
+      {showLogoTransition ? (
+        <LogoTransitionOverlay onDone={() => setShowLogoTransition(false)} />
+      ) : null}
     </div>
   );
 }
