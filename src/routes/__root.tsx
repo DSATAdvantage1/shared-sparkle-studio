@@ -381,11 +381,12 @@ function RootComponent() {
 
   useEffect(() => {
     const previousPath = previousPathRef.current;
+    const enteredTest = location.pathname === "/test" && previousPath !== "/test";
     const enteredQuestionBank =
       location.pathname.startsWith("/questions-bank") &&
       !previousPath.startsWith("/questions-bank");
 
-    if (enteredQuestionBank) setShowLogoTransition(true);
+    if (enteredTest || enteredQuestionBank) setShowLogoTransition(true);
     previousPathRef.current = location.pathname;
   }, [location.pathname]);
 
