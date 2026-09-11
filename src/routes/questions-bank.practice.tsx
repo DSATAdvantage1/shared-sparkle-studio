@@ -24,6 +24,7 @@ import {
 
 import { consumeTransition } from "@/routes/pageTransitionStore";
 import { PageTransition1600 } from "@/components/transitions/PageTransition1600";
+import { LogoTransitionOverlay } from "@/components/transitions/LogoTransition";
 import { useQuestionBankData } from "./questions-bank.reading-writing";
 
 const searchSchema = z.object({
@@ -63,6 +64,7 @@ function PracticePage() {
   const containerRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLElement>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [showLogoTransition, setShowLogoTransition] = useState(false);
 
   useEffect(() => {
     function onFullscreenChange() {
@@ -258,7 +260,10 @@ function PracticePage() {
             onClick={() => {
               if (containerRef.current?.requestFullscreen) {
                 if (document.fullscreenElement) document.exitFullscreen();
-                else containerRef.current.requestFullscreen();
+                else {
+                  setShowLogoTransition(true);
+                  containerRef.current.requestFullscreen();
+                }
               }
             }}
             className="flex flex-col items-center gap-0.5"
@@ -657,6 +662,9 @@ function PracticePage() {
           </div>
         </div>
       )}
+      {showLogoTransition ? (
+        <LogoTransitionOverlay onDone={() => setShowLogoTransition(false)} />
+      ) : null}
     </div>
   );
 
