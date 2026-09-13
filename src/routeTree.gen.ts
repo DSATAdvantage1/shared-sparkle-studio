@@ -21,6 +21,7 @@ import { Route as QuestionsBankRouteImport } from './routes/questions-bank'
 import { Route as ScoreEstimatorRouteImport } from './routes/score-estimator'
 import { Route as TestRouteImport } from './routes/test'
 import { Route as VocabularyRouteImport } from './routes/vocabulary'
+import { Route as WelcomeRouteImport } from './routes/welcome'
 import { Route as AdminPdfImportQuestionBankRouteImport } from './routes/admin.pdf-import-question-bank'
 import { Route as AdminQuestionBankRouteImport } from './routes/admin.question-bank'
 import { Route as AdminTestsRouteImport } from './routes/admin.tests'
@@ -93,6 +94,11 @@ const VocabularyRoute = VocabularyRouteImport.update({
   path: '/vocabulary',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WelcomeRoute = WelcomeRouteImport.update({
+  id: '/welcome',
+  path: '/welcome',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminPdfImportQuestionBankRoute =
   AdminPdfImportQuestionBankRouteImport.update({
     id: '/pdf-import-question-bank',
@@ -155,6 +161,7 @@ export interface FileRoutesByFullPath {
   '/score-estimator': typeof ScoreEstimatorRoute
   '/test': typeof TestRoute
   '/vocabulary': typeof VocabularyRoute
+  '/welcome': typeof WelcomeRoute
   '/admin/pdf-import-question-bank': typeof AdminPdfImportQuestionBankRoute
   '/admin/question-bank': typeof AdminQuestionBankRoute
   '/admin/tests': typeof AdminTestsRoute
@@ -178,6 +185,7 @@ export interface FileRoutesByTo {
   '/score-estimator': typeof ScoreEstimatorRoute
   '/test': typeof TestRoute
   '/vocabulary': typeof VocabularyRoute
+  '/welcome': typeof WelcomeRoute
   '/admin/pdf-import-question-bank': typeof AdminPdfImportQuestionBankRoute
   '/admin/question-bank': typeof AdminQuestionBankRoute
   '/admin/tests': typeof AdminTestsRoute
@@ -202,6 +210,7 @@ export interface FileRoutesById {
   '/score-estimator': typeof ScoreEstimatorRoute
   '/test': typeof TestRoute
   '/vocabulary': typeof VocabularyRoute
+  '/welcome': typeof WelcomeRoute
   '/admin/pdf-import-question-bank': typeof AdminPdfImportQuestionBankRoute
   '/admin/question-bank': typeof AdminQuestionBankRoute
   '/admin/tests': typeof AdminTestsRoute
@@ -227,6 +236,7 @@ export interface FileRouteTypes {
     | '/score-estimator'
     | '/test'
     | '/vocabulary'
+    | '/welcome'
     | '/admin/pdf-import-question-bank'
     | '/admin/question-bank'
     | '/admin/tests'
@@ -250,6 +260,7 @@ export interface FileRouteTypes {
     | '/score-estimator'
     | '/test'
     | '/vocabulary'
+    | '/welcome'
     | '/admin/pdf-import-question-bank'
     | '/admin/question-bank'
     | '/admin/tests'
@@ -273,6 +284,7 @@ export interface FileRouteTypes {
     | '/score-estimator'
     | '/test'
     | '/vocabulary'
+    | '/welcome'
     | '/admin/pdf-import-question-bank'
     | '/admin/question-bank'
     | '/admin/tests'
@@ -297,6 +309,7 @@ export interface RootRouteChildren {
   ScoreEstimatorRoute: typeof ScoreEstimatorRoute
   TestRoute: typeof TestRoute
   VocabularyRoute: typeof VocabularyRoute
+  WelcomeRoute: typeof WelcomeRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -383,6 +396,13 @@ declare module '@tanstack/react-router' {
       path: '/vocabulary'
       fullPath: '/vocabulary'
       preLoaderRoute: typeof VocabularyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/welcome': {
+      id: '/welcome'
+      path: '/welcome'
+      fullPath: '/welcome'
+      preLoaderRoute: typeof WelcomeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/pdf-import-question-bank': {
@@ -511,6 +531,7 @@ const rootRouteChildren: RootRouteChildren = {
   ScoreEstimatorRoute: ScoreEstimatorRoute,
   TestRoute: TestRoute,
   VocabularyRoute: VocabularyRoute,
+  WelcomeRoute: WelcomeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
