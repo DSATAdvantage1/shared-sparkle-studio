@@ -56,6 +56,13 @@ type BankQuestion = {
   explanation: string | null;
 };
 
+type SolvedQuestion = {
+  attempts: number;
+  correct: boolean;
+};
+
+const SOLVED_STORAGE_KEY = "qb-solved-history";
+
 function PracticePage() {
   const transitionReq = consumeTransition();
   const transitionKind = transitionReq?.kind;
@@ -68,7 +75,7 @@ function PracticePage() {
 
   useEffect(() => {
     function onFullscreenChange() {
-      setIsFullscreen(document.fullscreenElement === mainRef.current);
+      setIsFullscreen(document.fullscreenElement === containerRef.current);
     }
     document.addEventListener("fullscreenchange", onFullscreenChange);
     return () => {
@@ -123,6 +130,7 @@ function PracticePage() {
   const [calcOpen, setCalcOpen] = useState(false);
   const [refOpen, setRefOpen] = useState(false);
   const [highlights, setHighlights] = useState<Record<string, Highlight[]>>({});
+  const [solvedHistory, setSolvedHistory] = useState<Record<string, SolvedQuestion>>({});
 
   const isMath = section === "MATH";
 
@@ -141,18 +149,36 @@ function PracticePage() {
     setAnswers(saved?.answers ?? {});
     setMarked(saved?.marked ?? {});
     setRevealed(saved?.revealed ?? {});
+    setHighlights(saved?.highlights ?? {});
   }, [progressKey]);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(SOLVED_STORAGE_KEY);
+      setSolvedHistory(raw ? JSON.parse(raw) : {});
+    } catch {
+      setSolvedHistory({});
+    }
+  }, []);
 
   useEffect(() => {
     try {
       localStorage.setItem(
         progressKey,
-        JSON.stringify({ answers, marked, revealed }),
+        JSON.stringify({ answers, marked, revealed, highlights }),
       );
     } catch {
       // ignore
     }
-  }, [progressKey, answers, marked, revealed]);
+  }, [progressKey, answers, marked, revealed, highlights]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(SOLVED_STORAGE_KEY, JSON.stringify(solvedHistory));
+    } catch {
+      // ignore
+    }
+  }, [solvedHistory]);
 
 
   const current = questions[index] as any;
@@ -220,6 +246,17 @@ function PracticePage() {
       else set.add(letter);
       return { ...e, [qid]: set };
     });
+  }
+  function checkAnswer() {
+    if (!userChoice) return;
+    setRevealed((r) => ({ ...r, [qid]: true }));
+    setSolvedHistory((history) => ({
+      ...history,
+      [qid]: {
+        attempts: (history[qid]?.attempts ?? 0) + 1,
+        correct: userChoice === current.correct_answer,
+      },
+    }));
   }
   function next() {
     if (index < questions.length - 1) setIndex((i) => i + 1);
@@ -402,10 +439,17 @@ function PracticePage() {
 
 
 
-          <p className="whitespace-pre-line font-[Georgia,Times_New_Roman,serif] text-[17px] leading-[1.42] text-foreground">
+          <div className="font-[Georgia,Times_New_Roman,serif] text-[17px] leading-[1.42] text-foreground">
             <strong className="font-extrabold">[@DSAT_Advantage]</strong>{" "}
-            {current.prompt}
-          </p>
+            <HighlightablePassage
+              text={current.prompt}
+              highlights={highlights[`${qid}:prompt`] ?? []}
+              onChange={(nextHighlights) =>
+                setHighlights((h) => ({ ...h, [`${qid}:prompt`]: nextHighlights }))
+              }
+              textClassName="inline whitespace-pre-line font-[Georgia,Times_New_Roman,serif] text-[17px] leading-[1.42] text-foreground"
+            />
+          </div>
 
           <div className="mt-5 space-y-[10px]">
             {current.choices.map((c: any) => {
@@ -418,11 +462,21 @@ function PracticePage() {
 
               return (
                 <div key={c.letter} className="flex items-center gap-2">
-                  <button
-                    onClick={() =>
-                      !isElim && !isRevealed && selectChoice(c.letter)
-                    }
-                    disabled={isElim || isRevealed}
+                  <div
+                    role="button"
+                    tabIndex={isElim || isRevealed ? -1 : 0}
+                    aria-disabled={isElim || isRevealed}
+                    onClick={() => {
+                      const selection = window.getSelection();
+                      if (!selection?.isCollapsed) return;
+                      if (!isElim && !isRevealed) selectChoice(c.letter);
+                    }}
+                    onKeyDown={(event) => {
+                      if ((event.key === "Enter" || event.key === " ") && !isElim && !isRevealed) {
+                        event.preventDefault();
+                        selectChoice(c.letter);
+                      }
+                    }}
                     className={`relative flex min-h-[44px] flex-1 items-stretch rounded-[6px] border bg-background text-left transition-colors ${
                       isCorrectChoice
                         ? "border-emerald-500 ring-1 ring-emerald-400"
@@ -453,8 +507,18 @@ function PracticePage() {
                       </span>
                     </span>
 
-                    <span className="flex flex-1 items-center py-2 pr-4 font-[Georgia,Times_New_Roman,serif] text-[16px] leading-[1.35] text-foreground">
-                      {c.text}
+                    <span className="flex flex-1 items-center py-2 pr-4">
+                      <HighlightablePassage
+                        text={c.text}
+                        highlights={highlights[`${qid}:choice:${c.letter}`] ?? []}
+                        onChange={(nextHighlights) =>
+                          setHighlights((h) => ({
+                            ...h,
+                            [`${qid}:choice:${c.letter}`]: nextHighlights,
+                          }))
+                        }
+                        textClassName="font-[Georgia,Times_New_Roman,serif] whitespace-pre-line text-[16px] leading-[1.35] text-foreground"
+                      />
                     </span>
 
                     {isCorrectChoice && (
@@ -463,7 +527,7 @@ function PracticePage() {
                     {isWrongPick && (
                       <XCircle className="mr-3 self-center h-5 w-5 text-rose-500" />
                     )}
-                  </button>
+                  </div>
 
                   {eliminatorOn && !isRevealed && (
                     <button
@@ -517,6 +581,7 @@ function PracticePage() {
                 <div className="grid min-h-0 grid-cols-10 gap-2 overflow-y-auto overscroll-contain p-4 [scrollbar-gutter:stable]">
                   {questions.map((q, i) => {
                     const answered = answers[q.id] !== undefined;
+                    const solved = solvedHistory[q.id];
                     const isCurrent = i === index;
                     const isReview = !!marked[q.id];
 
@@ -532,12 +597,23 @@ function PracticePage() {
                             ? isMath
                               ? "bg-blue-600 text-background"
                               : "bg-rose-500 text-background"
-                            : answered
+                            : solved?.correct
+                              ? "border border-emerald-500 bg-emerald-100 text-emerald-800"
+                              : solved
+                                ? "border border-amber-500 bg-amber-100 text-amber-900"
+                                : answered
                               ? "bg-foreground/10 text-foreground border border-foreground/30"
                               : "border border-dashed border-foreground/55 text-foreground"
                         }`}
                       >
                         {i + 1}
+                        {solved && !isCurrent && (
+                          solved.correct ? (
+                            <CheckCircle2 className="absolute -bottom-1.5 -right-1.5 h-3.5 w-3.5 fill-emerald-500 text-background" />
+                          ) : (
+                            <XCircle className="absolute -bottom-1.5 -right-1.5 h-3.5 w-3.5 fill-amber-500 text-background" />
+                          )
+                        )}
                         {isReview && (
                           <BookmarkCheck className="absolute -top-1.5 -right-1.5 h-3.5 w-3.5 fill-[oklch(0.65_0.2_25)] text-[oklch(0.65_0.2_25)]" />
                         )}
@@ -576,7 +652,7 @@ function PracticePage() {
             <>
               <Button
                 size="sm"
-                onClick={() => setRevealed((r) => ({ ...r, [qid]: true }))}
+                onClick={checkAnswer}
                 disabled={!userChoice}
                 className={`h-[34px] rounded-full px-6 text-[14px] font-semibold text-white ${isMath ? "bg-blue-600 hover:bg-blue-700" : "bg-rose-500 hover:bg-rose-600"}`}
               >

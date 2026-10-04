@@ -61,11 +61,13 @@ export function HighlightablePassage({
   highlights,
   onChange,
   enabled = true,
+  textClassName,
 }: {
   text: string;
   highlights: Highlight[];
   onChange: (next: Highlight[]) => void;
   enabled?: boolean;
+  textClassName?: string;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [popover, setPopover] = useState<
@@ -202,7 +204,12 @@ export function HighlightablePassage({
 
   return (
     <div ref={containerRef} className="relative" onMouseUp={handleMouseUp}>
-      <p className="font-[Georgia,Times_New_Roman,serif] whitespace-pre-line text-[17px] leading-[1.42] text-foreground">
+      <p
+        className={
+          textClassName ??
+          "font-[Georgia,Times_New_Roman,serif] whitespace-pre-line text-[17px] leading-[1.42] text-foreground"
+        }
+      >
         {segments.map((seg, idx) => {
           if (seg.highlights.length === 0)
             return <span key={idx}>{seg.text}</span>;
