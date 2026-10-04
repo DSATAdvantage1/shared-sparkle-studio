@@ -6,9 +6,8 @@ import { Toaster } from "@/components/ui/sonner";
 import "./auth.css";
 
 export const Route = createFileRoute("/auth")({
-  validateSearch: (s: Record<string, unknown>) => ({
-    mode: s.mode === "signup" ? ("signup" as const) : undefined,
-  }),
+  validateSearch: (s: Record<string, unknown>): { mode?: "signup" } =>
+    s.mode === "signup" ? { mode: "signup" } : {},
   head: () => ({
     meta: [
       { title: "Sign In — DSAT Advantage" },
