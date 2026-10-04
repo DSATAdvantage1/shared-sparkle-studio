@@ -501,8 +501,8 @@ function PracticePage() {
                 className="fixed inset-0 z-40"
                 onClick={() => setNavigatorOpen(false)}
               />
-              <div className="absolute bottom-[44px] left-1/2 z-50 w-[560px] max-w-[92vw] -translate-x-1/2 rounded-[10px] border border-foreground/25 bg-background shadow-[0_10px_30px_rgba(0,0,0,0.18)]">
-                <div className="flex items-center justify-between border-b border-foreground/15 px-4 py-2">
+              <div className="absolute bottom-[44px] left-1/2 z-50 flex max-h-[min(52vh,420px)] w-[560px] max-w-[92vw] -translate-x-1/2 flex-col overflow-hidden rounded-[10px] border border-foreground/25 bg-background shadow-[0_10px_30px_rgba(0,0,0,0.18)]">
+                <div className="flex shrink-0 items-center justify-between border-b border-foreground/15 px-4 py-2">
                   <p className="text-[14px] font-semibold text-foreground">
                     {isMath ? "Math" : "Reading and Writing"}
                   </p>
@@ -514,7 +514,7 @@ function PracticePage() {
                   </button>
                 </div>
 
-                <div className="grid grid-cols-10 gap-2 p-4">
+                <div className="grid min-h-0 grid-cols-10 gap-2 overflow-y-auto overscroll-contain p-4 [scrollbar-gutter:stable]">
                   {questions.map((q, i) => {
                     const answered = answers[q.id] !== undefined;
                     const isCurrent = i === index;
