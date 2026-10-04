@@ -174,6 +174,7 @@ function ReadingWritingBank() {
 }
 
 type Difficulty = "all" | "easy" | "medium" | "hard";
+type SolvedQuestion = { attempts: number; correct: boolean };
 
 export function BankPage({
   sectionTitle,
@@ -204,6 +205,16 @@ export function BankPage({
 
   const [difficulty, setDifficulty] = useState<Difficulty>("all");
   const [difficultyOpen, setDifficultyOpen] = useState(false);
+  const [solvedHistory, setSolvedHistory] = useState<Record<string, SolvedQuestion>>({});
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("qb-solved-history");
+      setSolvedHistory(raw ? JSON.parse(raw) : {});
+    } catch {
+      setSolvedHistory({});
+    }
+  }, []);
 
   useEffect(() => {
     const raw = sessionStorage.getItem(storageKey);
@@ -267,12 +278,6 @@ export function BankPage({
       };
     });
   }, [domains, domainCounts]);
-
-  // Placeholder for future progress integration.
-  // If/when we add progress tracking to the Question Bank section,
-  // this memo should derive from `filteredQuestions`.
-  const progressAccuracyText = "0% accuracy";
-  const progressErrorsText = "0 errors";
 
   const palette =
     accent === "pink"
@@ -400,6 +405,18 @@ export function BankPage({
         <div className="mt-6 grid gap-5 lg:grid-cols-2">
           {displayedDomains.map((d) => {
             const isOpen = open[d.name];
+            const domainQuestions = filteredQuestions.filter((q) => q.domain === d.name);
+            const solvedQuestions = domainQuestions.filter((q) => solvedHistory[String(q.id)]);
+            const correctQuestions = solvedQuestions.filter(
+              (q) => solvedHistory[String(q.id)]?.correct,
+            );
+            const errorCount = solvedQuestions.length - correctQuestions.length;
+            const accuracy = solvedQuestions.length
+              ? Math.round((correctQuestions.length / solvedQuestions.length) * 100)
+              : 0;
+            const completion = domainQuestions.length
+              ? Math.round((solvedQuestions.length / domainQuestions.length) * 100)
+              : 0;
             return (
               <div
                 key={d.name}
@@ -467,17 +484,20 @@ export function BankPage({
 
                 <div className="mt-5">
                   <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/80">
-                    <div className={`h-full w-[2%] ${palette.accentBg}`} />
+                    <div
+                      className={`h-full ${palette.accentBg}`}
+                      style={{ width: `${completion}%` }}
+                    />
                   </div>
                   <div className="mt-2 flex items-center justify-between text-xs">
                     <span className={`font-semibold ${palette.accentText}`}>
-                      {progressAccuracyText}
+                      {solvedQuestions.length} solved · {accuracy}% accuracy
                     </span>
                     <span
                       className={`inline-flex items-center gap-1 font-semibold ${palette.accentText}`}
                     >
                       <Edit3 className="h-3.5 w-3.5" />
-                      {progressErrorsText}
+                      {errorCount} {errorCount === 1 ? "error" : "errors"}
                     </span>
                   </div>
                 </div>
