@@ -5,6 +5,7 @@ import {
   HeadContent,
   Scripts,
   useLocation,
+  useNavigate,
 } from "@tanstack/react-router";
 import { useState, useEffect, useRef } from "react";
 import {
@@ -362,6 +363,28 @@ function RootComponent() {
   const [showLogoTransition, setShowLogoTransition] = useState(false);
   const location = useLocation();
   const previousPathRef = useRef(location.pathname);
+  const navigate = useNavigate();
+  const isPublicPath = location.pathname === "/auth" || location.pathname === "/welcome";
+  const [authChecked, setAuthChecked] = useState(false);
+  const [hasSession, setHasSession] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setHasSession(!!data.session);
+      setAuthChecked(true);
+    });
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => {
+      setHasSession(!!s);
+      setAuthChecked(true);
+    });
+    return () => sub.subscription.unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (authChecked && !hasSession && !isPublicPath) {
+      navigate({ to: "/welcome", replace: true });
+    }
+  }, [authChecked, hasSession, isPublicPath, navigate]);
 
   // Persist collapsed state
   useEffect(() => {
@@ -442,6 +465,11 @@ function RootComponent() {
     location.pathname.startsWith("/questions-bank/practice");
 
   const sidebarWidth = collapsed ? "72px" : "280px";
+
+  if (isPublicPath) return <Outlet />;
+  if (!authChecked || !hasSession) {
+    return <div className="min-h-screen bg-background" />;
+  }
 
   return (
     <TextSelectionProvider>

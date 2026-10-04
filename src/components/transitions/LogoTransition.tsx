@@ -3,7 +3,7 @@ import { usePrefersReducedMotion } from "@/routes/exams.animations";
 import logoBadge from "@/assets/logo-dsat-badge.svg";
 import logoWordmark from "@/assets/logo-dsat-wordmark.svg";
 
-const NAVY = "#081426";
+const NAVY = "#040b17";
 
 type OverlayProps = {
   /** Total time the overlay stays on screen (ms). */
@@ -49,6 +49,7 @@ export function LogoTransitionOverlay({ durationMs = 1200, onDone }: OverlayProp
 
       {/* logo stack */}
       <div className="relative flex flex-col items-center gap-5">
+        <div className="dsatlogo-ring" />
         <img
           src={logoBadge}
           alt=""
@@ -95,6 +96,16 @@ export function LogoTransition({
 }
 
 const logoTransitionCss = `
+.dsatlogo-ring {
+  position: absolute; left: 50%; top: 56px; width: 170px; height: 170px;
+  margin-left: -85px; margin-top: -85px; border-radius: 999px;
+  background: conic-gradient(from 0deg, rgba(56,189,248,0), rgba(56,189,248,0.9), rgba(249,115,22,0.8), rgba(56,189,248,0));
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px));
+  animation: dsatlogo-spin 1100ms linear infinite, dsatlogo-word-in 500ms ease both;
+}
+@keyframes dsatlogo-spin { to { transform: rotate(360deg); } }
+
 @keyframes dsatlogo-fadeout {
   from { opacity: 1; }
   to { opacity: 0; }
@@ -144,7 +155,7 @@ const logoTransitionCss = `
   border-radius: 999px;
   background: linear-gradient(90deg, rgba(56,189,248,0), rgba(56,189,248,0.9), rgba(56,189,248,0));
   transform-origin: center;
-  animation: dsatlogo-bar 800ms cubic-bezier(0.22, 1, 0.36, 1) 300ms both;
+  animation: dsatlogo-bar 900ms cubic-bezier(0.22, 1, 0.36, 1) 300ms both;
 }
 
 @keyframes dsatlogo-bar {
