@@ -136,6 +136,9 @@ function PracticePage() {
 
   const progressKey = `qb-progress:${section}:${domain ?? ""}:${skill ?? ""}`;
 
+  const loadedProgressKey = useRef<string | null>(null);
+  const solvedLoaded = useRef(false);
+
   useEffect(() => {
     setIndex(0);
     setEliminated({});
@@ -150,6 +153,7 @@ function PracticePage() {
     setMarked(saved?.marked ?? {});
     setRevealed(saved?.revealed ?? {});
     setHighlights(saved?.highlights ?? {});
+    loadedProgressKey.current = null;
   }, [progressKey]);
 
   useEffect(() => {
@@ -162,6 +166,11 @@ function PracticePage() {
   }, []);
 
   useEffect(() => {
+    // Skip the first run after loading so we never overwrite saved data with empty state.
+    if (loadedProgressKey.current !== progressKey) {
+      loadedProgressKey.current = progressKey;
+      return;
+    }
     try {
       localStorage.setItem(
         progressKey,
@@ -173,8 +182,17 @@ function PracticePage() {
   }, [progressKey, answers, marked, revealed, highlights]);
 
   useEffect(() => {
+    if (!solvedLoaded.current) {
+      solvedLoaded.current = true;
+      return;
+    }
     try {
-      localStorage.setItem(SOLVED_STORAGE_KEY, JSON.stringify(solvedHistory));
+      const raw = localStorage.getItem(SOLVED_STORAGE_KEY);
+      const stored = raw ? JSON.parse(raw) : {};
+      localStorage.setItem(
+        SOLVED_STORAGE_KEY,
+        JSON.stringify({ ...stored, ...solvedHistory }),
+      );
     } catch {
       // ignore
     }
