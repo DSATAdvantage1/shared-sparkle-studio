@@ -59,6 +59,7 @@ type BankQuestion = {
 type SolvedQuestion = {
   attempts: number;
   correct: boolean;
+  answer?: string;
 };
 
 const SOLVED_STORAGE_KEY = "qb-solved-history";
@@ -246,9 +247,11 @@ function PracticePage() {
   }
 
   const qid = current.id;
-  const userChoice = answers[qid];
+  const pastSolve = solvedHistory[qid];
+  // A question solved before stays solved forever: restore its last answer and keep it revealed.
+  const userChoice = answers[qid] ?? pastSolve?.answer;
   const isMarked = !!marked[qid];
-  const isRevealed = !!revealed[qid];
+  const isRevealed = !!revealed[qid] || !!pastSolve;
   const elimSet = eliminated[qid] ?? new Set<string>();
 
   function selectChoice(letter: string) {
@@ -273,6 +276,7 @@ function PracticePage() {
       [qid]: {
         attempts: (history[qid]?.attempts ?? 0) + 1,
         correct: userChoice === current.correct_answer,
+        answer: userChoice,
       },
     }));
   }
