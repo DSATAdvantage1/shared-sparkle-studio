@@ -53,11 +53,9 @@ export function normalizeBankQuestion(row: any, index = 0): Question {
 
   return {
     id:
-      typeof row?.id === "number"
+      typeof row?.id === "number" || typeof row?.id === "string"
         ? row.id
-        : Number.isFinite(Number(row?.id))
-          ? Number(row.id)
-          : Date.now() + index,
+        : `bank-${index}`,
     module: row?.section === "MATH" ? "math" : "rw",
     passage: row?.passage ?? "",
     prompt: row?.prompt ?? "",

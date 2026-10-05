@@ -629,7 +629,7 @@ function PracticePage() {
                         }`}
                       >
                         {i + 1}
-                        {solved && !isCurrent && (
+                        {solved && (
                           solved.correct ? (
                             <CheckCircle2 className="absolute -bottom-1.5 -right-1.5 h-3.5 w-3.5 fill-emerald-500 text-background" />
                           ) : (
