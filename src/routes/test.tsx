@@ -27,6 +27,7 @@ import {
   Minimize2,
 } from "lucide-react";
 import { questions, moduleInfo, type Question } from "@/lib/test-data";
+import { getTestResult, saveTestResult, deleteTestResult } from "@/lib/test-results";
 import {
   HighlightablePassage,
   type Highlight,
@@ -219,10 +220,20 @@ function TestPage() {
       : questions;
 
   const navigate = useNavigate();
-  const storageKey = `dsat-test-progress:${search.testId ?? search.set ?? "default"}`;
+  const testKey = search.testId ?? search.set ?? "default";
+  const storageKey = `dsat-test-progress:${testKey}`;
+  const resultLoadedRef = useRef(false);
 
-  // Load saved progress on mount
+  // Load a saved result (completed test) or saved progress on mount
   useEffect(() => {
+    const pastResult = getTestResult(testKey);
+    if (pastResult) {
+      resultLoadedRef.current = true;
+      setAnswers(pastResult.answers ?? {});
+      setTextAnswers(pastResult.textAnswers ?? {});
+      setStage("results");
+      return;
+    }
     try {
       const raw = localStorage.getItem(storageKey);
       if (!raw) return;
@@ -318,6 +329,31 @@ function TestPage() {
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stage, timeLeft]);
+
+  // Persist the result once a test is finished (not when re-opening a saved one).
+  useEffect(() => {
+    if (stage !== "results" || resultLoadedRef.current) return;
+    if (activeQuestions.length === 0) return;
+    const right = (q: Question) =>
+      isSpr(q) ? sprMatches(textAnswers[q.id], q.correctText) : answers[q.id] === q.correct;
+    const score = activeQuestions.filter(right).length;
+    const scaled = (["rw", "math"] as const).reduce((acc, m) => {
+      const qs = activeQuestions.filter((q) => q.module === m);
+      if (!qs.length) return acc;
+      const r = qs.filter(right).length;
+      return acc + Math.round((200 + (600 * r) / qs.length) / 10) * 10;
+    }, 0);
+    saveTestResult(testKey, {
+      answers: answers as Record<string, number | undefined>,
+      textAnswers: textAnswers as Record<string, string>,
+      score,
+      total: activeQuestions.length,
+      scaled,
+      completedAt: new Date().toISOString(),
+    });
+    resultLoadedRef.current = true;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stage, activeQuestions.length]);
 
   function durationOfPart(i: number) {
     return moduleInfo[parts[i]?.key ?? "rw"].durationSec;
@@ -437,6 +473,14 @@ function TestPage() {
     }
 
     return introUi;
+  }
+
+  if (stage === "results" && search.testId && dbQuestionsLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <p className="text-muted-foreground">Loading your result…</p>
+      </div>
+    );
   }
 
   if (stage === "results") {
@@ -656,18 +700,23 @@ function TestPage() {
                 <Link to="/">Back to home</Link>
               </Button>
               <Button
-                className="bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white shadow-md shadow-sky-500/15 rounded-full h-11 px-8 font-semibold"
+                className="bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-500 hover:to-red-500 text-white shadow-md rounded-full h-11 px-8 font-semibold"
                 onClick={() => {
+                  if (!window.confirm("Delete this result and take the test again?")) return;
+                  deleteTestResult(testKey);
+                  resultLoadedRef.current = false;
                   setAnswers({});
+                  setTextAnswers({});
                   setMarked({});
                   setEliminated({});
                   setStage("test");
                   setPartIdx(0);
                   setIndex(0);
                   setTimeLeft(durationOfPart(0));
+                  toast.success("Result deleted. Good luck!");
                 }}
               >
-                Retake Test
+                Delete result &amp; retake
               </Button>
             </div>
           </Card>
