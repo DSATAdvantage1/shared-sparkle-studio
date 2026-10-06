@@ -704,6 +704,7 @@ function TestPage() {
                 onClick={() => {
                   if (!window.confirm("Delete this result and take the test again?")) return;
                   deleteTestResult(testKey);
+                  resultLoadedRef.current = false;
                   setAnswers({});
                   setTextAnswers({});
                   setMarked({});
