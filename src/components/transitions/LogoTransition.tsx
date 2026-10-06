@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { usePrefersReducedMotion } from "@/routes/exams.animations";
 import logoAsset from "@/assets/dsat-advantage-transition-logo.jpg.asset.json";
 
-const NAVY = "#0b1f4d";
+const NAVY = "#03224e";
 const LOGO_URL = logoAsset.url;
 
 type OverlayProps = {
