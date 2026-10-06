@@ -356,7 +356,7 @@ function ExamCard({
     : exam.month === "November" && exam.year === 2025
       ? { set: "nov-2025" }
       : {};
-  const testKey = exam.dbId ?? ("set" in search ? search.set : "default");
+  const testKey: string = exam.dbId ?? ("set" in search && search.set ? search.set : "default");
 
   const [result, setResult] = useState<SavedTestResult | null>(null);
   const [inProgress, setInProgress] = useState(false);
