@@ -1,23 +1,20 @@
 import { useEffect, useState } from "react";
 import { usePrefersReducedMotion } from "@/routes/exams.animations";
-import logoBadge from "@/assets/logo-dsat-badge.svg";
-import logoWordmark from "@/assets/logo-dsat-wordmark.svg";
+import logoAsset from "@/assets/dsat-advantage-transition-logo.jpg.asset.json";
 
-const NAVY = "#040b17";
+const NAVY = "#0b1f4d";
+const LOGO_URL = logoAsset.url;
 
 type OverlayProps = {
-  /** Total time the overlay stays on screen (ms). */
   durationMs?: number;
-  /** Called once when the overlay finishes. */
   onDone?: () => void;
 };
 
 /**
- * Full-screen animated logo overlay. Covers the whole viewport with the
- * platform's navy surface, animates the DSAT Advantage badge + wordmark in,
- * plays a light sweep, then fades away.
+ * Full-screen overlay that animates only the uploaded DSAT Advantage logo:
+ * the logo rises in, a soft light shine passes across it, then everything fades.
  */
-export function LogoTransitionOverlay({ durationMs = 1200, onDone }: OverlayProps) {
+export function LogoTransitionOverlay({ durationMs = 1400, onDone }: OverlayProps) {
   const reduced = usePrefersReducedMotion();
   const [gone, setGone] = useState(false);
 
@@ -41,42 +38,18 @@ export function LogoTransitionOverlay({ durationMs = 1200, onDone }: OverlayProp
         background: NAVY,
         animation: reduced
           ? "dsatlogo-fadeout 250ms ease both"
-          : `dsatlogo-fadeout 300ms ease ${durationMs - 300}ms both`,
+          : `dsatlogo-fadeout 350ms ease ${durationMs - 350}ms both`,
       }}
     >
-      {/* ambient glow */}
-      <div className="dsatlogo-glow" />
-
-      {/* logo stack */}
-      <div className="relative flex flex-col items-center gap-5">
-        <div className="dsatlogo-ring" />
-        <img
-          src={logoBadge}
-          alt=""
-          className="dsatlogo-badge h-24 w-auto sm:h-28"
-          draggable={false}
-        />
-        <img
-          src={logoWordmark}
-          alt="DSAT Advantage"
-          className="dsatlogo-wordmark h-14 w-auto sm:h-16"
-          draggable={false}
-        />
-        <div className="dsatlogo-bar" />
+      <div className="dsatlogo-frame">
+        <img src={LOGO_URL} alt="DSAT Advantage" className="dsatlogo-img" draggable={false} />
+        {!reduced && <div className="dsatlogo-shine" />}
       </div>
-
-      {/* light sweep */}
-      {!reduced && <div className="dsatlogo-sweep" />}
-
-      <style>{logoTransitionCss}</style>
+      <style>{css}</style>
     </div>
   );
 }
 
-/**
- * Wrapper that plays the logo transition over its children once, then
- * reveals them.
- */
 export function LogoTransition({
   children,
   durationMs,
@@ -88,97 +61,37 @@ export function LogoTransition({
   return (
     <div className="relative">
       {children}
-      {!done && (
-        <LogoTransitionOverlay durationMs={durationMs} onDone={() => setDone(true)} />
-      )}
+      {!done && <LogoTransitionOverlay durationMs={durationMs} onDone={() => setDone(true)} />}
     </div>
   );
 }
 
-const logoTransitionCss = `
-.dsatlogo-ring {
-  position: absolute; left: 50%; top: 56px; width: 170px; height: 170px;
-  margin-left: -85px; margin-top: -85px; border-radius: 999px;
-  background: conic-gradient(from 0deg, rgba(56,189,248,0), rgba(56,189,248,0.9), rgba(249,115,22,0.8), rgba(56,189,248,0));
-  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px));
-  mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px));
-  animation: dsatlogo-spin 1100ms linear infinite, dsatlogo-word-in 500ms ease both;
+const css = `
+@keyframes dsatlogo-fadeout { from { opacity: 1; } to { opacity: 0; } }
+.dsatlogo-frame {
+  position: relative; overflow: hidden;
+  width: min(78vw, 520px);
+  animation: dsatlogo-in 800ms cubic-bezier(0.22, 1, 0.36, 1) both,
+             dsatlogo-breathe 1600ms ease-in-out 800ms infinite;
 }
-@keyframes dsatlogo-spin { to { transform: rotate(360deg); } }
-
-@keyframes dsatlogo-fadeout {
-  from { opacity: 1; }
-  to { opacity: 0; }
+.dsatlogo-img { display: block; width: 100%; height: auto; }
+@keyframes dsatlogo-in {
+  0% { opacity: 0; transform: translateY(18px) scale(0.92); filter: blur(8px); }
+  100% { opacity: 1; transform: none; filter: blur(0); }
 }
-
-.dsatlogo-glow {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: min(70vw, 560px);
-  height: min(70vw, 560px);
-  transform: translate(-50%, -50%);
-  background: radial-gradient(closest-side, rgba(56,189,248,0.22), rgba(10,76,255,0.10) 55%, rgba(8,20,38,0) 75%);
-  filter: blur(6px);
-  animation: dsatlogo-glow 1200ms ease both;
+@keyframes dsatlogo-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.025); }
 }
-
-@keyframes dsatlogo-glow {
-  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
-  35% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-  100% { opacity: 0.9; transform: translate(-50%, -50%) scale(1.05); }
+.dsatlogo-shine {
+  position: absolute; top: 0; bottom: 0; left: -40%; width: 35%;
+  background: linear-gradient(100deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.35) 50%, rgba(255,255,255,0) 100%);
+  mix-blend-mode: screen;
+  animation: dsatlogo-shine 700ms ease 600ms both;
 }
-
-.dsatlogo-badge {
-  animation: dsatlogo-badge-in 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
-  filter: drop-shadow(0 0 24px rgba(56,189,248,0.45));
-}
-
-@keyframes dsatlogo-badge-in {
-  0% { opacity: 0; transform: scale(0.6) translateY(14px); filter: blur(6px) drop-shadow(0 0 24px rgba(56,189,248,0.45)); }
-  60% { opacity: 1; transform: scale(1.06) translateY(0); filter: blur(0) drop-shadow(0 0 24px rgba(56,189,248,0.45)); }
-  100% { opacity: 1; transform: scale(1); }
-}
-
-.dsatlogo-wordmark {
-  animation: dsatlogo-word-in 700ms cubic-bezier(0.22, 1, 0.36, 1) 180ms both;
-}
-
-@keyframes dsatlogo-word-in {
-  0% { opacity: 0; transform: translateY(16px); filter: blur(4px); }
-  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
-}
-
-.dsatlogo-bar {
-  height: 3px;
-  width: 180px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, rgba(56,189,248,0), rgba(56,189,248,0.9), rgba(56,189,248,0));
-  transform-origin: center;
-  animation: dsatlogo-bar 900ms cubic-bezier(0.22, 1, 0.36, 1) 300ms both;
-}
-
-@keyframes dsatlogo-bar {
-  0% { opacity: 0; transform: scaleX(0); }
-  100% { opacity: 1; transform: scaleX(1); }
-}
-
-.dsatlogo-sweep {
-  position: absolute;
-  left: -20%;
-  top: 50%;
-  width: 55%;
-  height: 200px;
-  transform: translateY(-50%);
-  background: linear-gradient(90deg, rgba(56,189,248,0) 0%, rgba(56,189,248,0.35) 50%, rgba(56,189,248,0) 100%);
-  filter: blur(3px);
-  opacity: 0;
-  animation: dsatlogo-sweep 500ms ease 550ms both;
-}
-
-@keyframes dsatlogo-sweep {
-  0% { opacity: 0; left: -20%; }
-  25% { opacity: 0.8; }
-  100% { opacity: 0; left: 110%; }
+@keyframes dsatlogo-shine {
+  0% { left: -40%; opacity: 0; }
+  20% { opacity: 1; }
+  100% { left: 120%; opacity: 0; }
 }
 `;
