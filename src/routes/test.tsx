@@ -330,6 +330,31 @@ function TestPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stage, timeLeft]);
 
+  // Persist the result once a test is finished (not when re-opening a saved one).
+  useEffect(() => {
+    if (stage !== "results" || resultLoadedRef.current) return;
+    if (activeQuestions.length === 0) return;
+    const right = (q: Question) =>
+      isSpr(q) ? sprMatches(textAnswers[q.id], q.correctText) : answers[q.id] === q.correct;
+    const score = activeQuestions.filter(right).length;
+    const scaled = (["rw", "math"] as const).reduce((acc, m) => {
+      const qs = activeQuestions.filter((q) => q.module === m);
+      if (!qs.length) return acc;
+      const r = qs.filter(right).length;
+      return acc + Math.round((200 + (600 * r) / qs.length) / 10) * 10;
+    }, 0);
+    saveTestResult(testKey, {
+      answers: answers as Record<string, number | undefined>,
+      textAnswers: textAnswers as Record<string, string>,
+      score,
+      total: activeQuestions.length,
+      scaled,
+      completedAt: new Date().toISOString(),
+    });
+    resultLoadedRef.current = true;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stage, activeQuestions.length]);
+
   function durationOfPart(i: number) {
     return moduleInfo[parts[i]?.key ?? "rw"].durationSec;
   }
