@@ -27,6 +27,7 @@ import {
   Minimize2,
 } from "lucide-react";
 import { questions, moduleInfo, type Question } from "@/lib/test-data";
+import { getTestResult, saveTestResult, deleteTestResult } from "@/lib/test-results";
 import {
   HighlightablePassage,
   type Highlight,
@@ -219,10 +220,20 @@ function TestPage() {
       : questions;
 
   const navigate = useNavigate();
-  const storageKey = `dsat-test-progress:${search.testId ?? search.set ?? "default"}`;
+  const testKey = search.testId ?? search.set ?? "default";
+  const storageKey = `dsat-test-progress:${testKey}`;
+  const resultLoadedRef = useRef(false);
 
-  // Load saved progress on mount
+  // Load a saved result (completed test) or saved progress on mount
   useEffect(() => {
+    const pastResult = getTestResult(testKey);
+    if (pastResult) {
+      resultLoadedRef.current = true;
+      setAnswers(pastResult.answers ?? {});
+      setTextAnswers(pastResult.textAnswers ?? {});
+      setStage("results");
+      return;
+    }
     try {
       const raw = localStorage.getItem(storageKey);
       if (!raw) return;
@@ -437,6 +448,14 @@ function TestPage() {
     }
 
     return introUi;
+  }
+
+  if (stage === "results" && search.testId && dbQuestionsLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <p className="text-muted-foreground">Loading your result…</p>
+      </div>
+    );
   }
 
   if (stage === "results") {
@@ -656,18 +675,22 @@ function TestPage() {
                 <Link to="/">Back to home</Link>
               </Button>
               <Button
-                className="bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white shadow-md shadow-sky-500/15 rounded-full h-11 px-8 font-semibold"
+                className="bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-500 hover:to-red-500 text-white shadow-md rounded-full h-11 px-8 font-semibold"
                 onClick={() => {
+                  if (!window.confirm("Delete this result and take the test again?")) return;
+                  deleteTestResult(testKey);
                   setAnswers({});
+                  setTextAnswers({});
                   setMarked({});
                   setEliminated({});
                   setStage("test");
                   setPartIdx(0);
                   setIndex(0);
                   setTimeLeft(durationOfPart(0));
+                  toast.success("Result deleted. Good luck!");
                 }}
               >
-                Retake Test
+                Delete result &amp; retake
               </Button>
             </div>
           </Card>
