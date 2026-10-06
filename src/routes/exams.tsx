@@ -1,6 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { CalendarDays } from "lucide-react";
+import { CalendarDays, CheckCircle2, Trash2 } from "lucide-react";
+import {
+  getTestResult,
+  deleteTestResult,
+  hasTestProgress,
+  type SavedTestResult,
+} from "@/lib/test-results";
 
 function formatMs(ms: number) {
   if (!Number.isFinite(ms)) return "?";
@@ -350,33 +356,75 @@ function ExamCard({
     : exam.month === "November" && exam.year === 2025
       ? { set: "nov-2025" }
       : {};
+  const testKey = exam.dbId ?? ("set" in search ? search.set : "default");
+
+  const [result, setResult] = useState<SavedTestResult | null>(null);
+  const [inProgress, setInProgress] = useState(false);
+  useEffect(() => {
+    setResult(getTestResult(testKey));
+    setInProgress(hasTestProgress(testKey));
+  }, [testKey]);
+
+  function handleDelete() {
+    if (!window.confirm(`Delete your result for "${title}"? You'll be able to take it again.`)) return;
+    deleteTestResult(testKey);
+    setResult(null);
+    setInProgress(false);
+  }
 
   return (
-    <article className="exams-card">
+    <article className={`exams-card ${result ? "ring-2 ring-emerald-400/60" : ""}`}>
       <div className="exams-card-header">
         <span className="exams-card-badge">
           {exam.questions} Qs
         </span>
-        <div className="exams-card-icon">
-          <CalendarDays className="h-5 w-5" />
-        </div>
+        {result ? (
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-700">
+            <CheckCircle2 className="h-4 w-4" /> Solved
+          </span>
+        ) : (
+          <div className="exams-card-icon">
+            <CalendarDays className="h-5 w-5" />
+          </div>
+        )}
       </div>
-      
+
       <h2 className="exams-card-title">
         {title}
       </h2>
-      
-      <div className="exams-card-details">
-        <div className="exams-detail-box">
-          <p className="exams-detail-label">Section</p>
-          <p className="exams-detail-value">{exam.section}</p>
+
+      {result ? (
+        <div className="exams-card-details">
+          <div className="exams-detail-box">
+            <p className="exams-detail-label">Past score</p>
+            <p className="exams-detail-value">
+              {result.score}/{result.total}
+            </p>
+          </div>
+          <div className="exams-detail-box">
+            <p className="exams-detail-label">Estimated</p>
+            <p className="exams-detail-value">{result.scaled}/1600</p>
+          </div>
         </div>
-        <div className="exams-detail-box">
-          <p className="exams-detail-label">Duration</p>
-          <p className="exams-detail-value">2h 14m</p>
+      ) : (
+        <div className="exams-card-details">
+          <div className="exams-detail-box">
+            <p className="exams-detail-label">Section</p>
+            <p className="exams-detail-value">{exam.section}</p>
+          </div>
+          <div className="exams-detail-box">
+            <p className="exams-detail-label">Duration</p>
+            <p className="exams-detail-value">2h 14m</p>
+          </div>
         </div>
-      </div>
-      
+      )}
+
+      {result && (
+        <p className="mb-3 text-xs text-slate-500">
+          Solved on {new Date(result.completedAt).toLocaleDateString()}
+        </p>
+      )}
+
       <Link
         to="/test"
         search={search}
@@ -393,8 +441,17 @@ function ExamCard({
               }
         }
       >
-        Start Exam
+        {result ? "View result" : inProgress ? "Resume Exam" : "Start Exam"}
       </Link>
+      {result && (
+        <button
+          type="button"
+          onClick={handleDelete}
+          className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-full border border-rose-200 bg-rose-50 px-4 py-2.5 text-sm font-semibold text-rose-600 transition hover:bg-rose-100"
+        >
+          <Trash2 className="h-4 w-4" /> Delete result to retake
+        </button>
+      )}
     </article>
   );
 }
