@@ -37,6 +37,7 @@ import { DesmosCalculator } from "@/components/DesmosCalculator";
 import { novemberQuestions } from "@/lib/test-data-nov-2025";
 import { getPublishedTestQuestions } from "@/server-fns/admin.functions";
 import { consumeTransition } from "@/routes/pageTransitionStore";
+import logo from "@/assets/dsat-advantage-logo.png";
 import { PageTransition1600 } from "@/components/transitions/PageTransition1600";
 import { LogoTransitionOverlay } from "@/components/transitions/LogoTransition";
 import "./test.css";
@@ -1247,12 +1248,17 @@ function TestHeader() {
     <header className="border-b border-slate-100 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md sticky top-0 z-50">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
         <Link to="/" className="flex items-center gap-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-sky-600 to-blue-500 shadow-sm">
-            <Star className="h-4.5 w-4.5 fill-white text-white" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-950 shadow-sm">
+            <img src={logo} alt="DSAT" className="h-6 w-6" />
           </div>
-          <span className="font-extrabold text-[17px] tracking-tight text-slate-800 dark:text-slate-100">
-            dsat<span className="text-sky-500 dark:text-sky-400">uz</span>
-          </span>
+          <div className="flex flex-col leading-tight">
+            <span className="text-sm font-extrabold tracking-tight text-slate-950 dark:text-slate-100">
+              DSAT
+            </span>
+            <span className="text-[9px] font-semibold uppercase tracking-[0.4em] text-blue-600 dark:text-blue-400">
+              ADVANTAGE
+            </span>
+          </div>
         </Link>
         <Link
           to="/"
