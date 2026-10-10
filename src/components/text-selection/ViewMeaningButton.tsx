@@ -33,7 +33,7 @@ export function ViewMeaningButton() {
         data-text-selection-toolbar="true"
         style={buttonStyle}
         onClick={() => {
-          setMeaningWord(selection.text);
+          setMeaningWord(selection?.text ?? "");
           setMeaningOpen(true);
         }}
         className="flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[12px] font-semibold text-slate-700 shadow-lg backdrop-blur transition hover:bg-slate-50"
