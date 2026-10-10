@@ -155,6 +155,32 @@ export function HighlightablePassage({
     return () => document.removeEventListener("mousedown", onDocClick);
   }, []);
 
+  // Publish the highlight toolbar's on-screen rect so the "Look up" button
+  // can position itself next to it instead of overlapping.
+  useLayoutEffect(() => {
+    if (!popover) {
+      setHighlightPopoverRect(null);
+      return;
+    }
+    const el = popoverRef.current;
+    if (!el) {
+      setHighlightPopoverRect(null);
+      return;
+    }
+    const r = el.getBoundingClientRect();
+    setHighlightPopoverRect({
+      left: r.left,
+      top: r.top,
+      right: r.right,
+      bottom: r.bottom,
+      height: r.height,
+    });
+  }, [popover]);
+
+  useEffect(() => {
+    return () => setHighlightPopoverRect(null);
+  }, []);
+
   function applyColor(color: HighlightColor) {
     if (!popover) return;
     if (popover.mode === "create") {
