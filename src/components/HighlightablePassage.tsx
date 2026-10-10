@@ -1,5 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Trash2 } from "lucide-react";
+
+import { setHighlightPopoverRect } from "@/components/text-selection/highlightPopoverBus";
 
 type HighlightColor = "yellow" | "blue" | "pink";
 type UnderlineStyle = "solid" | "dotted" | "dashed" | null;
@@ -70,6 +72,7 @@ export function HighlightablePassage({
   textClassName?: string;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const popoverRef = useRef<HTMLDivElement>(null);
   const [popover, setPopover] = useState<
     | {
         x: number;
@@ -150,6 +153,32 @@ export function HighlightablePassage({
     }
     document.addEventListener("mousedown", onDocClick);
     return () => document.removeEventListener("mousedown", onDocClick);
+  }, []);
+
+  // Publish the highlight toolbar's on-screen rect so the "Look up" button
+  // can position itself next to it instead of overlapping.
+  useLayoutEffect(() => {
+    if (!popover) {
+      setHighlightPopoverRect(null);
+      return;
+    }
+    const el = popoverRef.current;
+    if (!el) {
+      setHighlightPopoverRect(null);
+      return;
+    }
+    const r = el.getBoundingClientRect();
+    setHighlightPopoverRect({
+      left: r.left,
+      top: r.top,
+      right: r.right,
+      bottom: r.bottom,
+      height: r.height,
+    });
+  }, [popover]);
+
+  useEffect(() => {
+    return () => setHighlightPopoverRect(null);
   }, []);
 
   function applyColor(color: HighlightColor) {
@@ -247,6 +276,7 @@ export function HighlightablePassage({
 
       {popover && (
         <div
+          ref={popoverRef}
           className="absolute z-50 -translate-x-1/2 -translate-y-full"
           style={{ left: popover.x, top: popover.y }}
           onMouseDown={(e) => e.stopPropagation()}
