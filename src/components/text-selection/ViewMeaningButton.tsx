@@ -2,6 +2,10 @@ import * as React from "react";
 import { BookOpen } from "lucide-react";
 
 import { useTextSelection } from "@/hooks/useTextSelection";
+import {
+  subscribeHighlightPopoverRect,
+  type HighlightPopoverRect,
+} from "@/components/text-selection/highlightPopoverBus";
 
 export function ViewMeaningButton() {
   const {
@@ -11,6 +15,13 @@ export function ViewMeaningButton() {
     setMeaningOpen,
     setMeaningWord,
   } = useTextSelection();
+
+  const [pillRect, setPillRect] = React.useState<HighlightPopoverRect>(null);
+
+  React.useEffect(
+    () => subscribeHighlightPopoverRect(setPillRect),
+    [],
+  );
 
   if (!selection?.text || !toolbarPosition) return null;
   if (meaningOpen) return null;
