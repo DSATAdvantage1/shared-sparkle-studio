@@ -276,6 +276,7 @@ export function HighlightablePassage({
 
       {popover && (
         <div
+          ref={popoverRef}
           className="absolute z-50 -translate-x-1/2 -translate-y-full"
           style={{ left: popover.x, top: popover.y }}
           onMouseDown={(e) => e.stopPropagation()}
