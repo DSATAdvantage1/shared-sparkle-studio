@@ -1,5 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Trash2 } from "lucide-react";
+
+import { setHighlightPopoverRect } from "@/components/text-selection/highlightPopoverBus";
 
 type HighlightColor = "yellow" | "blue" | "pink";
 type UnderlineStyle = "solid" | "dotted" | "dashed" | null;
@@ -70,6 +72,7 @@ export function HighlightablePassage({
   textClassName?: string;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const popoverRef = useRef<HTMLDivElement>(null);
   const [popover, setPopover] = useState<
     | {
         x: number;
